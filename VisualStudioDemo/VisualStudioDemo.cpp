@@ -10,6 +10,7 @@
 #include "ScintillaDemoDoc.h"
 #include "ScintillaDemoView.h"
 #include "SourceCodeView.h"
+#include "SplashWnd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -65,6 +66,15 @@ BOOL CVisualStudioDemoApp::InitInstance()
 		return FALSE;
 	}
 #endif
+	
+	// CG: The following block was added by the Splash Screen component.
+	CCommandLineInfo cmdInfo;
+	ParseCommandLine(cmdInfo);
+
+	CSplashWnd::EnableSplashScreen();
+
+	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+
 
 	// The File Manager
 	m_pManager = std::make_shared<CFileManager>();
@@ -116,7 +126,7 @@ BOOL CVisualStudioDemoApp::InitInstance()
 
 	m_pDocTemplateCpp = new CMultiDocTemplate(IDR_DEVTYPE_CPP, 
 								RUNTIME_CLASS(CScintillaDemoDoc), 
-								RUNTIME_CLASS(CChildFrame), 
+									RUNTIME_CLASS(CChildFrame), 
 								RUNTIME_CLASS(CScintillaDemoView));
 
 	AddDocTemplate(m_pDocTemplateCpp);
@@ -129,12 +139,6 @@ BOOL CVisualStudioDemoApp::InitInstance()
 	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
 	m_pMainWnd = pMainFrame;
-
-	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
-
-	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
 
 	// Dispatch commands specified on the command line
 	if (!ProcessShellCommand(cmdInfo))

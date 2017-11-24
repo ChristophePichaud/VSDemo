@@ -102,9 +102,12 @@
 #define IDD_DIALOG1                     210
 #define IDD_DIALOG_FILENEW              210
 #define IDD_DIALOG_PROPERTIES           212
+#define IDB_BITMAP3                     213
+#define IDB_BITMAP1                     216
 #define IDD_SCINTILLA_FINDDLGORD        301
 #define IDD_SCINTILLA_REPLACEDLGORD     302
-#define IDD_ABOUTBOX                    999
+#define IDD_ABOUTBOX                    998
+#define IDD_ABOUTBOX2                   999
 #define IDC_MAIL                        1000
 #define IDC_URL                         1001
 #define IDC_FINDDIALOG_MATCHWHOLEWORDONLYCHECK 1001
@@ -337,7 +340,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        216
+#define _APS_NEXT_RESOURCE_VALUE        217
 #define _APS_NEXT_COMMAND_VALUE         32994
 #define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           124

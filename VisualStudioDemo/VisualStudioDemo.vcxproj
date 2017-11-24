@@ -1317,6 +1317,7 @@
     <ClCompile Include="ScintillaDemoView.cpp" />
     <ClCompile Include="ScintillaDocView.cpp" />
     <ClCompile Include="SourceCodeView.cpp" />
+    <ClCompile Include="SplashWnd.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|X64'">Create</PrecompiledHeader>
@@ -1378,6 +1379,7 @@
     <ClInclude Include="ScintillaDemoView.h" />
     <ClInclude Include="ScintillaDocView.h" />
     <ClInclude Include="SourceCodeView.h" />
+    <ClInclude Include="SplashWnd.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UndoBar.h" />
@@ -1448,6 +1450,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VisualStudioDemo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap3.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

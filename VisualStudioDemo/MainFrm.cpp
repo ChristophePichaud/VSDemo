@@ -7,6 +7,7 @@
 #include "ChildFrm.h"
 #include "UndoBar.h"
 #include "Helper.h"
+#include "SplashWnd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -244,6 +245,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnablePaneMenu( TRUE, ID_VIEW_CUSTOMIZE, _T("Customize..."), ID_VIEW_TOOLBARS, FALSE, TRUE);
 
 	EnableFullScreenMode(ID_VIEW_FULLSCREEN);
+
+	// CG: The following line was added by the Splash Screen component.
+	CSplashWnd::ShowSplashScreen(this);
+
 	return 0;
 }
 
