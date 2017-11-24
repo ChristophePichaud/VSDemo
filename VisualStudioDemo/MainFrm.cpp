@@ -8,6 +8,7 @@
 #include "UndoBar.h"
 #include "Helper.h"
 #include "SplashWnd.h"
+#include "ProjectPropertiesDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -579,6 +580,12 @@ void CMainFrame::SetDockingBarsIcons(BOOL bHiColorIcons)
 void CMainFrame::OnFileNewProject()
 {
 	// TODO: Add your command handler code here
+	this->ClearSolution();
+	this->CloseAllDocuments();
+	
+	CProjectPropertiesDialog dlg;
+	if (dlg.DoModal() == IDCANCEL)
+		return;
 }
 
 void CMainFrame::OnFileNewBlankSolution()
