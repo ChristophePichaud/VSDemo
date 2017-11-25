@@ -382,7 +382,7 @@ bool CFileManager::BuildTheSolution()
 	for (auto file : m_pSolution->_project._references)
 	{
 		CString strTemp;
-		strTemp.Format(_T("/reference:%s "), file->_path.c_str());
+		strTemp.Format(_T("/reference:%c%s%c "), '"', file->_path.c_str(), '"');
 
 		strCmd = strCmd + strTemp;
 	}
@@ -487,7 +487,7 @@ bool CFileManager::OpenSolution()
 	if (dlg.DoModal() == IDCANCEL)
 		return false;
 
-	pMainFrame->ClearSolution();
+	this->ClearSolution();
 
 	CString strFileName = dlg.GetFileName();
 	CString strPath = dlg.GetFolderPath();
@@ -545,3 +545,18 @@ bool CFileManager::OpenSolution()
 
 	return true;
 }
+
+void CFileManager::ClearSolution()
+{
+	CWnd * pWnd = AfxGetMainWnd();
+	CMainFrame * pMainFrame = (CMainFrame *)pWnd;
+
+	// TreeView
+	pMainFrame->m_wndFileView.FillFileView();
+	// Solution items
+	m_pSolution->_project._files.clear();
+	m_pSolution->_project._references.clear();
+	m_pSolution->_name = _T("");
+	m_pSolution->_properties._workingDirectory = _T("");
+}
+

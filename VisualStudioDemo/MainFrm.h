@@ -50,7 +50,6 @@ public:
 	void SetManager(std::shared_ptr<CFileManager> pManager);
 	void UpdateSolution(std::shared_ptr<CCodeFile> cf);
 	void UpdateSolution(std::shared_ptr<CAssemblyFile> cf);
-	void ClearSolution();
 	void CloseAllDocuments();
 
 protected:  // control bar embedded members

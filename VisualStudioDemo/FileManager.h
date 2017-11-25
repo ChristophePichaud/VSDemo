@@ -19,6 +19,7 @@ public:
 	CString GetSolutionName();
 	bool SaveSolution();
 	bool OpenSolution();
+	void ClearSolution();
 
 public:
 	static CString SearchDrive(const CString& strFile, const CString& strFilePath, const bool& bRecursive, const bool& bStopWhenFound, HTREEITEM parent);

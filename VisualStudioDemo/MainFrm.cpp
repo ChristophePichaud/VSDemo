@@ -580,7 +580,7 @@ void CMainFrame::SetDockingBarsIcons(BOOL bHiColorIcons)
 void CMainFrame::OnFileNewProject()
 {
 	// TODO: Add your command handler code here
-	this->ClearSolution();
+	GetManager()->ClearSolution();
 	this->CloseAllDocuments();
 	
 	CProjectPropertiesDialog dlg;
@@ -591,14 +591,14 @@ void CMainFrame::OnFileNewProject()
 void CMainFrame::OnFileNewBlankSolution()
 {
 	// TODO: Add your command handler code here
-	this->ClearSolution();
+	GetManager()->ClearSolution();
 	this->CloseAllDocuments();
 }
 
 void CMainFrame::OnFileCloseSolution()
 {
 	// TODO: Add your command handler code here
-	this->ClearSolution();
+	GetManager()->ClearSolution();
 	this->CloseAllDocuments();
 }
 
@@ -926,16 +926,6 @@ void CMainFrame::UpdateSolution(std::shared_ptr<CAssemblyFile> af)
 	m_wndFileView.UpdateSolution(af);
 }
 
-void CMainFrame::ClearSolution()
-{
-	// TreeView
-	m_wndFileView.FillFileView();
-	// Solution items
-	GetManager()->m_pSolution->_project._files.clear();
-	GetManager()->m_pSolution->_name = _T("");
-	GetManager()->m_pSolution->_properties._workingDirectory = _T("");
-}
-
 void CMainFrame::OnFileSaveSolution()
 {
 	GetManager()->SaveSolution();
@@ -969,7 +959,7 @@ void CMainFrame::OnFileOpenFolder()
 	if (dlg.DoModal() == IDCANCEL)
 		return;
 
-	this->ClearSolution();
+	GetManager()->ClearSolution();
 
 	CString strPath = dlg.GetFolderPath();
 
