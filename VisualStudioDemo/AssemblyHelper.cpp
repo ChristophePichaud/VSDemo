@@ -42,9 +42,9 @@ CString CAssemblyHelper::SearchDrive(const CString& strFile, const CString& strF
 				if (strExt != _T(".dll"))
 					continue;
 				
-				int index = strFoundFilePath.Find(_T("System."));
-				if (index == -1)
-					continue;
+				//int index = strFoundFilePath.Find(_T("System."));
+				//if (index == -1)
+				//	continue;
 
 				std::shared_ptr<CAssemblyFile> pAsm = std::make_shared<CAssemblyFile>();
 				pAsm->_name = strTheNameOfTheFile;
@@ -77,9 +77,14 @@ CString CAssemblyHelper::GetWindowsDirectory()
 
 CString CAssemblyHelper::GetFrameworkPath()
 {
-	CString strWinDir = CAssemblyHelper::GetWindowsDirectory();
+	TCHAR lpszBuffer[255];
+	DWORD dw = 255;
+
+	::GetEnvironmentVariable(_T("ProgramFiles(x86)"), lpszBuffer, dw);
+
+	CString strWinDir = lpszBuffer;
 	CString str;
-	str.Format(_T("%s\\Microsoft.NET\\Framework\\v4.0.30319"), strWinDir);
+	str.Format(_T("%s\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.6.2"), strWinDir);
 	return str;
 }
 

@@ -61,6 +61,7 @@ public:
 	std::wstring _configuration;
 	std::wstring _platform;
 	std::wstring _target;
+	bool _emitDebugInformation;
 };
 
 class CGlobalSettings

@@ -202,10 +202,6 @@ void CFileViewBar::OnSolutionOpen()
 		return;
 
 	GetManager()->LoadFile(pCode);
-
-	//CString str;
-	//str.Format(_T("Open %s"), pCode->_path.c_str());
-	//AfxMessageBox(str);
 }
 
 void CFileViewBar::OnSolutionOpenWith()

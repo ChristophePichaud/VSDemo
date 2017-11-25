@@ -140,6 +140,12 @@ void CProjectPropertiesDialog::OnBnClickedOk()
 	m_cbTarget.GetLBText(index, strTarget);
 	pApp->GetManager()->m_pSolution->_properties.SetTarget((LPCTSTR)strTarget);
 
+	if (m_bEmitDebugInformation == TRUE)
+		pApp->GetManager()->m_pSolution->_properties._emitDebugInformation = true;
+	else
+		pApp->GetManager()->m_pSolution->_properties._emitDebugInformation = false;
+
+
 	/*
 	AfxMessageBox(strConfiguration + _T(", ") + strPlatform + _T(", ") + strTarget);
 	std::wstring s1 = pApp->GetManager()->m_pSolution->_properties._configuration;

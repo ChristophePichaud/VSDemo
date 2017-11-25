@@ -274,6 +274,8 @@ bool CFileManager::BuildTheSolution()
 	CString strTarget = m_pSolution->_properties._target.c_str();
 	CString strConfiguration = m_pSolution->_properties._configuration.c_str();
 	CString strPlatform = m_pSolution->_properties._platform.c_str();
+	bool bEmitDebuggingInfomration = m_pSolution->_properties._emitDebugInformation;
+
 	//
 	// Create Debug & Release folder
 	//
@@ -322,16 +324,18 @@ bool CFileManager::BuildTheSolution()
 
 	bool bDebug = false;
 	if (strConfiguration == CConfiguration::debug.c_str())
-	{
 		bDebug = true;
-	}
 	else
-	{
 		bDebug = false;
-	}
+
 
 	if (bDebug == true)
-		strCmd = strCmd + _T("/debug+ /debug:full ");
+	{
+		if (bEmitDebuggingInfomration == true)
+			strCmd = strCmd + _T("/debug+ /debug:full ");
+		else
+			strCmd = strCmd + _T("/debug:full ");
+	}
 
 	//
 	// Choose platform
