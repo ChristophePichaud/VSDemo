@@ -76,12 +76,15 @@ bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBu
 	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
 	sa.bInheritHandle = TRUE;
 
-	CString strTempFolder;
-	strTempFolder = _T("C:\\temp");
-	::CreateDirectory((LPCTSTR)strTempFolder, NULL);
+	TCHAR lpszEnv[255];
+	DWORD dw = 255;
+	::GetEnvironmentVariable(_T("TEMP"), lpszEnv, dw);
+	CString strTempFolder = lpszEnv;
 
-	_stprintf(szCmdFileName, _T("c:\\temp\\cmd_%02d%02d%02d_%08ld.cmd"), stCmd.wHour, stCmd.wMinute, stCmd.wSecond, lCommandCount);
-	_stprintf(szCmdOutFileName, _T("c:\\temp\\cmd_%02d%02d%02d_%08ld_out.txt"), stCmd.wHour, stCmd.wMinute, stCmd.wSecond, lCommandCount);
+	//::CreateDirectory((LPCTSTR)strTempFolder, NULL);
+
+	_stprintf(szCmdFileName, _T("%s\\cmd_%02d%02d%02d_%08ld.cmd"), strTempFolder, stCmd.wHour, stCmd.wMinute, stCmd.wSecond, lCommandCount);
+	_stprintf(szCmdOutFileName, _T("%s\\cmd_%02d%02d%02d_%08ld_out.txt"), strTempFolder, stCmd.wHour, stCmd.wMinute, stCmd.wSecond, lCommandCount);
 
 	// Crꢴion du fichier .CMD
 	HANDLE hCmdFile = CreateFile(szCmdFileName, GENERIC_WRITE, 0, &sa, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
