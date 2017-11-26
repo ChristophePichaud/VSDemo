@@ -9,6 +9,7 @@
 #include "Helper.h"
 #include "SplashWnd.h"
 #include "ProjectPropertiesDialog.h"
+#include "ProjectReferencesDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -76,6 +77,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_FILE_ADD_EXISTING, &CMainFrame::OnFileAddExisting)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_FIND_COMBO, &CMainFrame::OnUpdateEditFind)
 	ON_UPDATE_COMMAND_UI(ID_DUMMY_SELECT_ACTIVE_CONFIGURATION, &CMainFrame::OnUpdateDummySelectActiveConfiguration)
+	ON_COMMAND(ID_PROJECT_PROPERTIES, &CMainFrame::OnProjectProperties)
+	ON_UPDATE_COMMAND_UI(ID_PROJECT_PROPERTIES, &CMainFrame::OnUpdateProjectProperties)
+	ON_COMMAND(ID_PROJECT_REFERENCES, &CMainFrame::OnProjectReferences)
+	ON_UPDATE_COMMAND_UI(ID_PROJECT_REFERENCES, &CMainFrame::OnUpdateProjectReferences)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -1045,4 +1050,46 @@ void CMainFrame::OnUpdateDummySelectActiveConfiguration(CCmdUI *pCmdUI)
 		pCmdUI->Enable(TRUE);
 		m_pComboButtonConfig->EnableWindow(TRUE);
 	}
+}
+
+
+void CMainFrame::OnProjectProperties()
+{
+	// TODO: Add your command handler code here
+	CProjectPropertiesDialog dlg = new CProjectPropertiesDialog();
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+}
+
+
+void CMainFrame::OnUpdateProjectProperties(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(TRUE);
+}
+
+
+void CMainFrame::OnProjectReferences()
+{
+	// TODO: Add your command handler code here
+	CProjectReferencesDialog dlg = new CProjectReferencesDialog();
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+
+	for (auto element : dlg.m_vDataSelected)
+	{
+		std::shared_ptr<CAssemblyFile> pAsm = std::make_shared<CAssemblyFile>();
+		pAsm->_name = element->_name;
+		pAsm->_path = element->_path;
+
+		GetManager()->m_pSolution->AddReferenceToProject(pAsm);
+		GetManager()->UpdateSolution(pAsm);
+	}
+}
+
+
+void CMainFrame::OnUpdateProjectReferences(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(TRUE);
 }

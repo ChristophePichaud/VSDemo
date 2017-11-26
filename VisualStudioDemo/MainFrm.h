@@ -131,4 +131,8 @@ public:
 	afx_msg void OnFileAddExisting();
 	afx_msg void OnUpdateEditFind(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateDummySelectActiveConfiguration(CCmdUI *pCmdUI);
+	afx_msg void OnProjectProperties();
+	afx_msg void OnUpdateProjectProperties(CCmdUI *pCmdUI);
+	afx_msg void OnProjectReferences();
+	afx_msg void OnUpdateProjectReferences(CCmdUI *pCmdUI);
 };

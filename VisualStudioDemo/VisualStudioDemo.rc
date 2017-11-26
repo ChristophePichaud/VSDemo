@@ -725,6 +725,11 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Select Active Configuration", ID_DUMMY_SELECT_ACTIVE_CONFIGURATION
     END
+    POPUP "&Project"
+    BEGIN
+        MENUITEM "&Properties",                 ID_PROJECT_PROPERTIES
+        MENUITEM "&References",                 ID_PROJECT_REFERENCES
+    END
     POPUP "&Tools"
     BEGIN
         MENUITEM "Debug &Process...",           ID_TOOLS_DEBUG_PROCESSES
