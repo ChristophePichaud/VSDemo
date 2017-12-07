@@ -100,6 +100,9 @@ void CScintillaDemoView::OnInitialUpdate()
   rCtrl.SetLexer(SCLEX_CPP);
   rCtrl.SetKeyWords(0, cppKeyWords);
 
+  // Set tabs
+  rCtrl.SetTabWidth(4);
+
   //Setup styles
   SetAStyle(STYLE_DEFAULT, RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 10, "Consolas"); //8, "Verdana");
   rCtrl.StyleClearAll();
