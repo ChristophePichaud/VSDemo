@@ -47,7 +47,7 @@ void CFileManager::UpdateSolution(std::shared_ptr<CAssemblyFile> af)
 	pmf->UpdateSolution(af);
 }
 
-bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen)
+bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen, DWORD *dwExit)
 {
 	USES_CONVERSION;
 
@@ -131,13 +131,14 @@ bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBu
 	}
 
 	WaitForSingleObject(pi.hProcess, INFINITE);
+	/*DWORD*/ *dwExit = 0;
+	GetExitCodeProcess(pi.hProcess, dwExit);
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 	// Fin du process OK
 
 	FlushFileBuffers(hCmdOutFile);
 	CloseHandle(hCmdOutFile);
-
 
 	HANDLE hReadCmdOutFile;
 	int iRetry = 0;
@@ -183,6 +184,9 @@ bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBu
 	// Fichiers .CMD  et OUT.TXT ࡤ굲uire
 	//DeleteFile(szCmdFileName);
 	//DeleteFile(szCmdOutFileName);
+
+	if (*dwExit != 0)
+		return false;
 
 	return true;
 }
@@ -397,10 +401,14 @@ bool CFileManager::BuildTheSolution()
 	CString strIniFile = GetSolutionName();
 	::WritePrivateProfileString(_T("Solution"), _T("LastCompileCmd"), strCmd, strIniFile);
 
+	// Clear Build Window
+	pMainFrame->m_wndOutputView.ClearBuildWindow();
+
 	// TODO: Add your command handler code here
 	char * lpszBuffer;
 	DWORD dwCount = 0;
-	ExecuteCommand((LPTSTR)(LPCTSTR)strCmd, &lpszBuffer, &dwCount);
+	DWORD dwExit = 0;
+	ExecuteCommand((LPTSTR)(LPCTSTR)strCmd, &lpszBuffer, &dwCount, &dwExit);
 
 	//::MessageBoxA(NULL, lpszBuffer, "Output", MB_OK);
 
@@ -418,13 +426,28 @@ bool CFileManager::BuildTheSolution()
 		pMainFrame->m_wndOutputView.AddString(A2W(s.c_str()));
 	}
 
+	//strMsg.Format(_T("Return code: %ld"), dwExit);
+	//pMainFrame->m_wndOutputView.AddString(strMsg);
+
+	if (dwExit == 0)
+	{
+		strMsg.Format(_T("======= Build: 1 succeeded ========"));
+		pMainFrame->m_wndOutputView.AddString(strMsg);
+	}
+	else
+	{
+		strMsg.Format(_T("======= Build: 1 failed ========"));
+		pMainFrame->m_wndOutputView.AddString(strMsg);
+
+	}
+
 	return true;
 }
 
 bool CFileManager::SaveSolution()
 {
 	CString strWorkingDir = m_pSolution->_properties._workingDirectory.c_str();
-	if (strWorkingDir.IsEmpty())
+	if (strWorkingDir.IsEmpty())	
 	{
 		AfxMessageBox(_T("Go to Project Properties and Set Working Folder for the Solution"));
 		return false;

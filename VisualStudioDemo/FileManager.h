@@ -14,7 +14,7 @@ public:
 	void LoadFile(CCodeFile * pCode);
 
 public:
-	bool ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen);
+	bool ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen, DWORD *dwExit);
 	bool BuildTheSolution();
 	CString GetSolutionName();
 	bool SaveSolution();

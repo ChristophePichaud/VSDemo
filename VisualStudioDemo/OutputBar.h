@@ -52,6 +52,9 @@ public:
 	}
 	void AddString(CString strMessage);
 
+public:
+	void ClearBuildWindow();
+
 protected:
 	void FillBuildWindow();
 	void FillDebugWindow();

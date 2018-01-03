@@ -141,6 +141,12 @@ void COutputBar::FillBuildWindow()
 void COutputBar::FillDebugWindow()
 {
 }
+
+void COutputBar::ClearBuildWindow()
+{
+	m_wndOutputBuild.ResetContent();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // COutputList1
 

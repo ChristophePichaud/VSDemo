@@ -75,10 +75,10 @@ CString CAssemblyHelper::GetWindowsDirectory()
 	return str;
 }
 
-CString CAssemblyHelper::GetFrameworkPath()
+CString CAssemblyHelper::GetFrameworkPath()	
 {
 	TCHAR lpszBuffer[255];
-	DWORD dw = 255;
+	DWORD dw = 255 * sizeof(TCHAR);
 
 	::GetEnvironmentVariable(_T("ProgramFiles(x86)"), lpszBuffer, dw);
 
