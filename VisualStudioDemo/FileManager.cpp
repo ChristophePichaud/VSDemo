@@ -47,6 +47,47 @@ void CFileManager::UpdateSolution(std::shared_ptr<CAssemblyFile> af)
 	pmf->UpdateSolution(af);
 }
 
+DWORD CFileManager::ExecuteCommand(LPTSTR lpszCmd)
+{
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+	BOOL bCreated = FALSE;
+	SECURITY_ATTRIBUTES sa;
+	TCHAR szTemp[4096];
+
+	memset(&pi, 0, sizeof(PROCESS_INFORMATION));
+	memset(&si, 0, sizeof(STARTUPINFO));
+	memset(&sa, 0, sizeof(SECURITY_ATTRIBUTES));
+
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	sa.bInheritHandle = TRUE;
+
+	// Information sur la sortie standard pour CreateProcess
+	si.cb = sizeof(STARTUPINFO);
+	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+	si.hStdOutput = NULL; //GetStdHandle(STD_OUTPUT_HANDLE);
+	si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+	si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+	si.wShowWindow = SW_SHOW; //SW_HIDE;                                   // IMPORTANT: hide subprocess console window
+
+																// Create process
+	bCreated = CreateProcess(NULL, lpszCmd, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi);
+	if (bCreated == FALSE)
+	{
+		_stprintf(szTemp, _T("CreateProcess %s failed GetLastError()=%ld"), lpszCmd, GetLastError());
+		return false;
+	}
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
+	DWORD dwExitCode = 0;
+	GetExitCodeProcess(pi.hProcess, &dwExitCode);
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	// Fin du process OK
+
+	return dwExitCode;
+}
+
 bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen, DWORD *dwExit)
 {
 	USES_CONVERSION;
@@ -278,6 +319,7 @@ bool CFileManager::BuildTheSolution()
 	CString strCompilerFilePath = m_pSolution->_settings._compilerFilePath.c_str();
 	CString strWorkingDir = m_pSolution->_properties._workingDirectory.c_str();
 	CString strSolutionName = m_pSolution->_name.c_str();
+	//CString strProjectName = m_pSolution->_project._name.c_str();
 	CString strTarget = m_pSolution->_properties._target.c_str();
 	CString strConfiguration = m_pSolution->_properties._configuration.c_str();
 	CString strPlatform = m_pSolution->_properties._platform.c_str();
@@ -290,10 +332,12 @@ bool CFileManager::BuildTheSolution()
 	CString strDebugFolder;
 	strDebugFolder.Format(_T("%s\\Debug"), strWorkingDir);
 	::CreateDirectory((LPCTSTR)strDebugFolder, NULL);
+	m_pSolution->_project._debugFolder = (LPCTSTR)strDebugFolder;
 
 	CString strReleaseFolder;
 	strReleaseFolder.Format(_T("%s\\Release"), strWorkingDir);
 	::CreateDirectory((LPCTSTR)strReleaseFolder, NULL);
+	m_pSolution->_project._releaseFolder = (LPCTSTR)strReleaseFolder;
 
 	//
 	// Determine a exe, dll or module
@@ -322,9 +366,6 @@ bool CFileManager::BuildTheSolution()
 		strExt = CExtension::module.c_str();
 	}
 
-	CString strCmd;
-	strCmd.Format(_T("%s /target:%s /out:%s\\%s.%s "), strCompilerFilePath, strTargetOpt, strDebugFolder, strSolutionName, strExt);
-
 	//
 	// Debug mode
 	//
@@ -335,6 +376,20 @@ bool CFileManager::BuildTheSolution()
 	else
 		bDebug = false;
 
+	//
+	// Final assembly output
+	//
+
+	CString strOutput;
+	strOutput.Format(_T("%s\\%s.%s"), bDebug ? strDebugFolder : strReleaseFolder, strSolutionName, strExt);
+	m_pSolution->_project._outputAssembly = (LPCTSTR)strOutput;
+
+	//
+	// Output for Roslyn
+	//
+
+	CString strCmd;
+	strCmd.Format(_T("%s /target:%s /out:%s\\%s.%s "), strCompilerFilePath, strTargetOpt, bDebug ? strDebugFolder : strReleaseFolder, strSolutionName, strExt);
 
 	if (bDebug == true)
 	{
@@ -433,12 +488,15 @@ bool CFileManager::BuildTheSolution()
 	{
 		strMsg.Format(_T("======= Build: 1 succeeded ========"));
 		pMainFrame->m_wndOutputView.AddString(strMsg);
+		
+		m_pSolution->_buildSucceeded = true;
 	}
 	else
 	{
 		strMsg.Format(_T("======= Build: 1 failed ========"));
 		pMainFrame->m_wndOutputView.AddString(strMsg);
 
+		m_pSolution->_buildSucceeded = false;
 	}
 
 	return true;
@@ -590,3 +648,8 @@ void CFileManager::ClearSolution()
 	m_pSolution->_properties._workingDirectory = _T("");
 }
 
+void CFileManager::RunProgram()
+{
+	CString str = m_pSolution->_project._outputAssembly.c_str();
+	ExecuteCommand((LPTSTR)(LPCTSTR)str);
+}

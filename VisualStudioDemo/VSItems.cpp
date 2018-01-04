@@ -19,6 +19,7 @@ const std::wstring CExtension::module = _T(".o");
 
 CSolution::CSolution()
 {
+	_buildSucceeded = false;
 }
 
 CSolution::~CSolution()

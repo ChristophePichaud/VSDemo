@@ -14,12 +14,14 @@ public:
 	void LoadFile(CCodeFile * pCode);
 
 public:
+	DWORD ExecuteCommand(LPTSTR lpszCmd);
 	bool ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBufferLen, DWORD *dwExit);
 	bool BuildTheSolution();
 	CString GetSolutionName();
 	bool SaveSolution();
 	bool OpenSolution();
 	void ClearSolution();
+	void RunProgram();
 
 public:
 	static CString SearchDrive(const CString& strFile, const CString& strFilePath, const bool& bRecursive, const bool& bStopWhenFound, HTREEITEM parent);

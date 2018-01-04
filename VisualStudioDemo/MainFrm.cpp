@@ -71,6 +71,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_SETTINGCHANGE()
 	ON_COMMAND(ID_DUMMY_BUILD, &CMainFrame::OnDummyBuild)
 	ON_UPDATE_COMMAND_UI(ID_DUMMY_BUILD, &CMainFrame::OnUpdateDummyBuild)
+	ON_COMMAND(ID_DUMMY_EXECUTE, &CMainFrame::OnDummyExecute)
+	ON_UPDATE_COMMAND_UI(ID_DUMMY_EXECUTE, &CMainFrame::OnUpdateDummyExecute)	
 	ON_COMMAND(ID_FILE_SAVE_SOLUTION, &CMainFrame::OnFileSaveSolution)
 	ON_COMMAND(ID_FILE_OPEN_FOLDER, &CMainFrame::OnFileOpenFolder)
 	ON_COMMAND(ID_FILE_CLOSE_FOLDER, &CMainFrame::OnFileCloseFolder)
@@ -955,6 +957,19 @@ void CMainFrame::OnUpdateDummyBuild(CCmdUI *pCmdUI)
 		pCmdUI->Enable(FALSE);
 	else
 		pCmdUI->Enable(TRUE);
+}
+
+void CMainFrame::OnDummyExecute()
+{
+	GetManager()->RunProgram();
+}
+
+void CMainFrame::OnUpdateDummyExecute(CCmdUI *pCmdUI)
+{
+	if (GetManager()->m_pSolution->_buildSucceeded == true)
+		pCmdUI->Enable(TRUE);
+	else
+		pCmdUI->Enable(FALSE);
 }
 
 void CMainFrame::OnFileOpenFolder()

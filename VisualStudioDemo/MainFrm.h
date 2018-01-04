@@ -125,6 +125,8 @@ protected:
 public:
 	afx_msg void OnDummyBuild();
 	afx_msg void OnUpdateDummyBuild(CCmdUI *pCmdUI);
+	afx_msg void OnDummyExecute();
+	afx_msg void OnUpdateDummyExecute(CCmdUI *pCmdUI);
 	afx_msg void OnFileSaveSolution();
 	afx_msg void OnFileOpenFolder();
 	afx_msg void OnFileCloseFolder();

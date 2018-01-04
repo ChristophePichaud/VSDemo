@@ -20,6 +20,9 @@ public:
 	std::vector<std::shared_ptr<CCodeFile>> _files;
 	std::vector<std::shared_ptr<CAssemblyFile>> _references;
 	std::wstring _name;
+	std::wstring _debugFolder;
+	std::wstring _releaseFolder;
+	std::wstring _outputAssembly;
 }; 
 
 class CCodeFile
@@ -85,6 +88,7 @@ public:
 	CProject _project;
 	CProjectProperties _properties;
 	CGlobalSettings _settings;
+	bool _buildSucceeded;
 
 public:
 	void AddFileToProject(std::shared_ptr<CCodeFile> pCodeFile);
