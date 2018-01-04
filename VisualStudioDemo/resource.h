@@ -171,6 +171,7 @@
 #define IDC_BROWSE_ASSEMBLY             1032
 #define IDC_MFCLINK1                    1033
 #define IDC_MFCLINK2                    1034
+#define IDC_ABOUT_VERSION               1035
 #define IDC_REGULAR_EXPRESSION          1042
 #define ID_VIEW_CUSTOMIZE               32770
 #define ID_VIEW_USER_TOOLBAR1           32771
@@ -346,7 +347,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        218
 #define _APS_NEXT_COMMAND_VALUE         32996
-#define _APS_NEXT_CONTROL_VALUE         1034
+#define _APS_NEXT_CONTROL_VALUE         1036
 #define _APS_NEXT_SYMED_VALUE           124
 #endif
 #endif

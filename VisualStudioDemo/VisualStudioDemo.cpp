@@ -11,6 +11,7 @@
 #include "ScintillaDemoView.h"
 #include "SourceCodeView.h"
 #include "SplashWnd.h"
+#include "Version.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -184,9 +185,13 @@ protected:
 		// No message handlers
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	CString m_strVersion;
+	virtual BOOL OnInitDialog();
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
+, m_strVersion(_T(""))
 {
 	//{{AFX_DATA_INIT(CAboutDlg)
 	//}}AFX_DATA_INIT
@@ -197,6 +202,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CAboutDlg)
 	//}}AFX_DATA_MAP
+	DDX_Text(pDX, IDC_ABOUT_VERSION, m_strVersion);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
@@ -295,3 +301,20 @@ BOOL CVisualStudioDemoApp::SaveAllModified()
 	return TRUE;
 }
 
+
+
+BOOL CAboutDlg::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	// TODO:  Add extra initialization here
+
+	UpdateData(TRUE);
+
+	m_strVersion.Format(_T("Version: %s"), ApplicationVersion.c_str());
+
+	UpdateData(FALSE);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // EXCEPTION: OCX Property Pages should return FALSE
+}

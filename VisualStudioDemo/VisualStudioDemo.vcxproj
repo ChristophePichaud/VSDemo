@@ -1384,6 +1384,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UndoBar.h" />
     <ClInclude Include="UndoListBox.h" />
+    <ClInclude Include="Version.h" />
     <ClInclude Include="VisualStudioDemo.h" />
     <ClInclude Include="VisualStudioDemoDoc.h" />
     <ClInclude Include="VisualStudioDemoView.h" />
