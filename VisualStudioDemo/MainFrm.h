@@ -63,7 +63,7 @@ protected:  // control bar embedded members
 	//CClassViewBar m_wndClassView;
 	//CResourceViewBar m_wndResourceView;
 	//CDynamicHelpViewBar m_wndDynamicHelpView;
-	CPropertiesViewBar m_wndPropertiesBar;
+	//CPropertiesViewBar m_wndPropertiesBar;
 	//CWatchBar m_wndWatchBar;
 
 	CMFCToolBarImages m_UserImages;
@@ -137,4 +137,7 @@ public:
 	afx_msg void OnUpdateProjectProperties(CCmdUI *pCmdUI);
 	afx_msg void OnProjectReferences();
 	afx_msg void OnUpdateProjectReferences(CCmdUI *pCmdUI);
+
+public:
+	bool m_bOpenFolder;
 };

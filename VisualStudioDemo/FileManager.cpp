@@ -484,6 +484,9 @@ bool CFileManager::BuildTheSolution()
 	//strMsg.Format(_T("Return code: %ld"), dwExit);
 	//pMainFrame->m_wndOutputView.AddString(strMsg);
 
+	strMsg.Format(_T("Creating output assembly => %s"), strOutput);
+	pMainFrame->m_wndOutputView.AddString(strMsg);
+
 	if (dwExit == 0)
 	{
 		strMsg.Format(_T("======= Build: 1 succeeded ========"));

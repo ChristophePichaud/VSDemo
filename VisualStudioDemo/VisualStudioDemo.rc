@@ -701,7 +701,6 @@ BEGIN
         MENUITEM "F&ull Screen",                ID_VIEW_FULLSCREEN
         MENUITEM SEPARATOR
         MENUITEM "So&lution Explorer",          ID_VIEW_FILE
-        MENUITEM "&Properties View",            ID_VIEW_PROPERTIES
         MENUITEM "&Output",                     ID_VIEW_OUTPUT
         MENUITEM SEPARATOR
         POPUP "&Toolbars"
@@ -790,7 +789,6 @@ BEGIN
     POPUP "&View"
     BEGIN
         MENUITEM "So&lution Explorer",          ID_VIEW_FILE
-        MENUITEM "&Properties View",            ID_VIEW_PROPERTIES
         MENUITEM "&Output",                     ID_VIEW_OUTPUT
         MENUITEM SEPARATOR
         POPUP "&Toolbars"

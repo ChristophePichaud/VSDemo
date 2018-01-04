@@ -52,8 +52,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_VIEW_FILE, OnViewFile)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_FILE, OnUpdateViewFile)
 	ON_COMMAND(ID_VIEW_RESOURCE, OnViewResource)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_RESOURCE, OnUpdateViewResource)
-	ON_COMMAND(ID_VIEW_PROPERTIES, OnViewProperties)
+	//ON_UPDATE_COMMAND_UI(ID_VIEW_RESOURCE, OnUpdateViewResource)
+	//ON_COMMAND(ID_VIEW_PROPERTIES, OnViewProperties)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PROPERTIES, OnUpdateViewProperties)
 	ON_COMMAND(ID_VIEW_OUTPUT, OnViewOutput)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_OUTPUT, OnUpdateViewOutput)
@@ -105,6 +105,8 @@ CMainFrame::CMainFrame()
 	// Set Manager pointer
 	CVisualStudioDemoApp * pApp = (CVisualStudioDemoApp *)AfxGetApp();
 	SetManager(pApp->GetManager());
+
+	m_bOpenFolder = false;
 }
 
 CMainFrame::~CMainFrame()
@@ -213,7 +215,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndOutputView.EnableDocking(CBRS_ALIGN_ANY);
 	//m_wndDynamicHelpView.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndPropertiesBar.EnableDocking(CBRS_ALIGN_ANY);
+	//m_wndPropertiesBar.EnableDocking(CBRS_ALIGN_ANY);
 
 	//m_wndWatchBar.EnableDocking(CBRS_ALIGN_ANY);
 
@@ -223,7 +225,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	DockPane(&m_wndMenuBar);
 	DockPane(&m_wndToolBar);
-	DockPane(&m_wndPropertiesBar);
+	//DockPane(&m_wndPropertiesBar);
 
 	DockPane(&m_wndToolbarBuild);
 	DockPaneLeftOf(&m_wndToolbarEdit, &m_wndToolbarBuild);
@@ -545,11 +547,11 @@ BOOL CMainFrame::CreateDockingBars()
 	//	return FALSE;      // fail to create
 	//}
 
-	if (!m_wndPropertiesBar.Create(_T("Properties"), this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create Properties Bar\n");
-		return FALSE; // fail to create
-	}
+	//if (!m_wndPropertiesBar.Create(_T("Properties"), this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIES, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("Failed to create Properties Bar\n");
+	//	return FALSE; // fail to create
+	//}
 
 	SetDockingBarsIcons(FALSE);
 
@@ -578,8 +580,8 @@ void CMainFrame::SetDockingBarsIcons(BOOL bHiColorIcons)
 	HICON hWatchBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_WATCH_BAR_HC : IDI_WATCH_BAR), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	//m_wndWatchBar.SetIcon(hWatchBarIcon, FALSE);
 
-	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROP_BAR_HC : IDI_PROPERTIES_BAR), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndPropertiesBar.SetIcon(hPropertiesBarIcon, FALSE);
+	//HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROP_BAR_HC : IDI_PROPERTIES_BAR), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	//m_wndPropertiesBar.SetIcon(hPropertiesBarIcon, FALSE);
 
 	UpdateMDITabbedBarsIcons();
 }
@@ -687,9 +689,9 @@ void CMainFrame::OnChangeLook(BOOL bOneNoteTabs, BOOL bMDITabColors, BOOL bIsVSD
 
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
 
-	m_wndPropertiesBar.SetVSDotNetLook(bIsVSDotNetLook);
+	//m_wndPropertiesBar.SetVSDotNetLook(bIsVSDotNetLook);
 
-	m_wndPropertiesBar.OnChangeVisualStyle();
+	//m_wndPropertiesBar.OnChangeVisualStyle();
 	//m_wndDynamicHelpView.OnChangeVisualStyle();
 	//m_wndClassView.OnChangeVisualStyle();
 	m_wndFileView.OnChangeVisualStyle();
@@ -857,12 +859,12 @@ void CMainFrame::OnUpdateViewResource(CCmdUI* pCmdUI)
 
 void CMainFrame::OnViewProperties()
 {
-	m_wndPropertiesBar.ShowPane(!m_wndPropertiesBar.IsVisible(), FALSE, TRUE);
+	//m_wndPropertiesBar.ShowPane(!m_wndPropertiesBar.IsVisible(), FALSE, TRUE);
 }
 
 void CMainFrame::OnUpdateViewProperties(CCmdUI* pCmdUI)
 {
-	pCmdUI->SetCheck(m_wndPropertiesBar.IsVisible());
+	//pCmdUI->SetCheck(m_wndPropertiesBar.IsVisible());
 }
 
 void CMainFrame::OnViewOutput()
@@ -951,6 +953,12 @@ void CMainFrame::OnDummyBuild()
 void CMainFrame::OnUpdateDummyBuild(CCmdUI *pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
+	if (m_bOpenFolder == true)
+	{
+		pCmdUI->Enable(FALSE);
+		return;
+	}
+
 	size_t fileCount = GetManager()->m_pSolution->_project._files.size();
 
 	if (fileCount == 0)
@@ -985,6 +993,8 @@ void CMainFrame::OnFileOpenFolder()
 
 	CFileManager::SearchDrive(_T("*.*"), strPath, true, false, m_wndFileView._hSrc);
 	m_wndFileView.m_wndFileView.Expand(m_wndFileView._hSrc, TVE_EXPAND);
+
+	m_bOpenFolder = true;
 }
 
 void CMainFrame::OnFileCloseFolder()
@@ -992,6 +1002,8 @@ void CMainFrame::OnFileCloseFolder()
 	// TODO: Add your command handler code here
 	this->OnFileCloseSolution();
 	this->CloseAllDocuments();
+
+	m_bOpenFolder = false;
 }
 
 void CMainFrame::CloseAllDocuments()
