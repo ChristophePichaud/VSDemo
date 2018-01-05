@@ -380,8 +380,14 @@ bool CFileManager::BuildTheSolution()
 	// Final assembly output
 	//
 
+	CString strOutputFolder;
+	if (bDebug == true)
+		strOutputFolder = strDebugFolder;
+	else
+		strOutputFolder = strReleaseFolder;
+
 	CString strOutput;
-	strOutput.Format(_T("%s\\%s.%s"), bDebug ? strDebugFolder : strReleaseFolder, strSolutionName, strExt);
+	strOutput.Format(_T("%s\\%s.%s"), strOutputFolder, strSolutionName, strExt);
 	m_pSolution->_project._outputAssembly = (LPCTSTR)strOutput;
 
 	//
@@ -389,7 +395,7 @@ bool CFileManager::BuildTheSolution()
 	//
 
 	CString strCmd;
-	strCmd.Format(_T("%s /target:%s /out:%s\\%s.%s "), strCompilerFilePath, strTargetOpt, bDebug ? strDebugFolder : strReleaseFolder, strSolutionName, strExt);
+	strCmd.Format(_T("%s /target:%s /out:%s\\%s.%s "), strCompilerFilePath, strTargetOpt, strOutputFolder, strSolutionName, strExt);
 
 	if (bDebug == true)
 	{
@@ -458,6 +464,20 @@ bool CFileManager::BuildTheSolution()
 
 	// Clear Build Window
 	pMainFrame->m_wndOutputView.ClearBuildWindow();
+
+	// Copy references
+	for (auto file : m_pSolution->_project._references)
+	{
+		LPCTSTR lpszSource = file->_path.c_str();
+		CString strDestination;
+		strDestination.Format(_T("%s\\%s"), strOutputFolder, file->_name.c_str());
+		LPCTSTR lpszDest = (LPCTSTR)strDestination;
+		BOOL b = ::CopyFile(lpszSource, lpszDest, FALSE);
+		if (b == FALSE)
+		{
+			DWORD dw = ::GetLastError();
+		}
+	}
 
 	// TODO: Add your command handler code here
 	char * lpszBuffer;

@@ -275,7 +275,7 @@ BEGIN
     LTEXT           "VSDemo Application",IDC_STATIC,70,16,80,8,SS_NOPREFIX
     LTEXT           "Developed by Christophe Pichaud in 2017",IDC_STATIC,67,47,149,8
     DEFPUSHBUTTON   "OK",IDOK,186,154,50,14,WS_GROUP
-    LTEXT           "Version 1.0",IDC_ABOUT_VERSION,173,16,75,8,SS_NOPREFIX
+    LTEXT           "Version 1.0",IDC_ABOUT_VERSION,173,16,110,8,SS_NOPREFIX
     GROUPBOX        "",IDC_STATIC,67,94,169,49
     LTEXT           "Product developed in association with Programmez magazine.\nUsing Scintilla component.\nUsing Naughter MFC wrappers.",IDC_STATIC,75,105,149,36
     CONTROL         "www.windowscpp.com",IDC_MFCLINK1,"MfcLink",WS_TABSTOP,67,57,90,12
@@ -1115,8 +1115,7 @@ GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
-        RIGHTMARGIN, 256
-        BOTTOMMARGIN, 196
+        RIGHTMARGIN, 290
     END
 
     IDD_ABOUTBOX2, DIALOG
