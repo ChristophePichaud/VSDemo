@@ -286,6 +286,7 @@ void CFileViewBar::SetManager(std::shared_ptr<CFileManager> pManager)
 
 void CFileViewBar::OnAddFileToProject()
 {
+	USES_CONVERSION;
 	// TODO: Add your command handler code here
 	CMainFrame * pFrame = (CMainFrame *)AfxGetMainWnd();
 	// Get the active MDI child window.
@@ -300,8 +301,8 @@ void CFileViewBar::OnAddFileToProject()
 	CString strFileName = pDoc->GetPathName();
 
 	std::shared_ptr<CCodeFile> cf = std::make_shared<CCodeFile>();
-	cf->_name = strFile;
-	cf->_path = strFileName;
+	cf->_name = T2W((LPTSTR)(LPCTSTR)strFile);
+	cf->_path = T2W((LPTSTR)(LPCTSTR)strFileName);
 
 	GetManager()->m_pSolution->AddFileToProject(cf);
 	GetManager()->UpdateSolution(cf);
@@ -309,7 +310,9 @@ void CFileViewBar::OnAddFileToProject()
 
 void CFileViewBar::UpdateSolution(std::shared_ptr<CCodeFile> cf)
 {
-	HTREEITEM hItem = m_wndFileView.InsertItem(cf->_name.c_str(), 1, 1, _hSrc);
+	USES_CONVERSION;
+	LPTSTR lpsz = W2T((LPTSTR)cf->_name.c_str());
+	HTREEITEM hItem = m_wndFileView.InsertItem(lpsz, 1, 1, _hSrc);
 	m_wndFileView.SetItemData(hItem, (DWORD_PTR)(cf.get()));
 	m_wndFileView.Expand(_hRootProject, TVE_EXPAND);
 	m_wndFileView.Expand(_hSrc, TVE_EXPAND);
@@ -317,13 +320,17 @@ void CFileViewBar::UpdateSolution(std::shared_ptr<CCodeFile> cf)
 
 void CFileViewBar::UpdateSolution(std::shared_ptr<CAssemblyFile> af)
 {
-	HTREEITEM item = m_wndFileView.InsertItem(af->_name.c_str(), 3, 3, _hReferences);
+	USES_CONVERSION;
+	LPTSTR lpsz = W2T((LPTSTR)af->_name.c_str());
+	HTREEITEM item = m_wndFileView.InsertItem(lpsz, 3, 3, _hReferences);
 	m_wndFileView.SetItemData(item, (DWORD_PTR)(af.get()));
 	m_wndFileView.Expand(_hReferences, TVE_EXPAND);
 }
 
 void CFileViewBar::OnRemoveFileFromProject()
 {
+	USES_CONVERSION;
+
 	// TODO: Add your command handler code here
 	HTREEITEM hItem = m_wndFileView.GetSelectedItem();
 	if (hItem == NULL)
@@ -333,7 +340,8 @@ void CFileViewBar::OnRemoveFileFromProject()
 	if (pCode == NULL)
 		return;
 	
-	LPTSTR lpszExt = ::PathFindExtension(pCode->_name.c_str());
+	LPTSTR lpsz = W2T((LPTSTR)pCode->_name.c_str());
+	LPTSTR lpszExt = ::PathFindExtension(lpsz);
 	CString strExt = lpszExt;
 	if (strExt == _T(".dll"))
 	{

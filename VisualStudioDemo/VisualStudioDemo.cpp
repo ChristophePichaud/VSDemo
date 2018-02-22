@@ -58,6 +58,8 @@ CVisualStudioDemoApp theApp;
 
 BOOL CVisualStudioDemoApp::InitInstance()
 {
+	USES_CONVERSION;
+
 #ifdef USE_SCINTILLA
 	//Load the scintilla dll
 	m_hSciDLL = LoadLibrary(_T("SciLexer.dll"));
@@ -87,7 +89,7 @@ BOOL CVisualStudioDemoApp::InitInstance()
 
 	CString strCSC;
 	strCSC.Format(_T("%s\\Bin\\tools\\CSC.exe"), lpszCurrentDir);
-	GetManager()->m_pSolution->_settings._compilerFilePath = (LPCTSTR)strCSC;
+	GetManager()->m_pSolution->_settings._compilerFilePath = T2W((LPTSTR)(LPCTSTR)strCSC);
 
 	//AfxMessageBox(strCSC);
 

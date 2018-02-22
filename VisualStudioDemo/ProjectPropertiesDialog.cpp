@@ -49,6 +49,8 @@ END_MESSAGE_MAP()
 
 BOOL CProjectPropertiesDialog::OnInitDialog()
 {
+	USES_CONVERSION;
+
 	CDialogEx::OnInitDialog();
 	UpdateData(FALSE);
 	UpdateData(TRUE);
@@ -58,26 +60,34 @@ BOOL CProjectPropertiesDialog::OnInitDialog()
 	m_strFilePath = pApp->GetManager()->m_pSolution->_settings._compilerFilePath.c_str();
 	m_strWorkingDir = pApp->GetManager()->m_pSolution->_properties._workingDirectory.c_str();
 	m_strSolutionName = pApp->GetManager()->m_pSolution->_name.c_str();
-	CString strConfiguration = pApp->GetManager()->m_pSolution->_properties._configuration.c_str();
-	CString strPlatform = pApp->GetManager()->m_pSolution->_properties._platform.c_str();
-	CString strTarget = pApp->GetManager()->m_pSolution->_properties._target.c_str();
+	CString strConfiguration = W2T((LPTSTR) pApp->GetManager()->m_pSolution->_properties._configuration.c_str());
+	CString strPlatform = W2T((LPTSTR) pApp->GetManager()->m_pSolution->_properties._platform.c_str());
+	CString strTarget = W2T((LPTSTR) pApp->GetManager()->m_pSolution->_properties._target.c_str());
 
-	m_cbConfiguration.AddString(CConfiguration::debug.c_str());
-	m_cbConfiguration.AddString(CConfiguration::release.c_str());	
+	LPCTSTR lpsz = W2T((LPTSTR)(LPCTSTR)CConfiguration::debug.c_str());
+	m_cbConfiguration.AddString(lpsz);
+	lpsz = W2T((LPTSTR)(LPCTSTR)CConfiguration::release.c_str());
+	m_cbConfiguration.AddString(lpsz);
 	m_cbConfiguration.SetCurSel(0);
 	int index = m_cbConfiguration.FindStringExact(-1, strConfiguration);
 	m_cbConfiguration.SetCurSel(index);
 
-	m_cbPlatform.AddString(CPlatform::x86.c_str());
-	m_cbPlatform.AddString(CPlatform::x64.c_str());
-	m_cbPlatform.AddString(CPlatform::anycpu.c_str());
+	lpsz = W2T((LPTSTR)(LPCTSTR)CPlatform::x86.c_str());
+	m_cbPlatform.AddString(lpsz);
+	lpsz = W2T((LPTSTR)(LPCTSTR)CPlatform::x64.c_str());
+	m_cbPlatform.AddString(lpsz);
+	lpsz = W2T((LPTSTR)(LPCTSTR)CPlatform::anycpu.c_str());
+	m_cbPlatform.AddString(lpsz);
 	m_cbPlatform.SetCurSel(0);
 	index = m_cbPlatform.FindStringExact(-1, strPlatform);
 	m_cbPlatform.SetCurSel(index);
 
-	m_cbTarget.AddString(CTarget::exe.c_str());
-	m_cbTarget.AddString(CTarget::library.c_str());
-	m_cbTarget.AddString(CTarget::winexe.c_str());
+	lpsz = W2T((LPTSTR)(LPCTSTR)CTarget::exe.c_str());
+	m_cbTarget.AddString(lpsz);
+	lpsz = W2T((LPTSTR)(LPCTSTR)CTarget::library.c_str());
+	m_cbTarget.AddString(lpsz);
+	lpsz = W2T((LPTSTR)(LPCTSTR)CTarget::winexe.c_str());
+	m_cbTarget.AddString(lpsz);
 	m_cbTarget.SetCurSel(0);
 	index = m_cbTarget.FindStringExact(-1, strTarget);
 	m_cbTarget.SetCurSel(index);
@@ -117,28 +127,30 @@ void CProjectPropertiesDialog::OnBnClickedProjectBrowse()
 
 void CProjectPropertiesDialog::OnBnClickedOk()
 {
+	USES_CONVERSION;
+
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 
 	CVisualStudioDemoApp * pApp = (CVisualStudioDemoApp *)AfxGetApp();
-	pApp->GetManager()->m_pSolution->_properties._workingDirectory = m_strWorkingDir;
-	pApp->GetManager()->m_pSolution->_settings._compilerFilePath = m_strFilePath;
-	pApp->GetManager()->m_pSolution->_name = m_strSolutionName;
+	pApp->GetManager()->m_pSolution->_properties._workingDirectory = T2W((LPTSTR)(LPCTSTR)m_strWorkingDir);
+	pApp->GetManager()->m_pSolution->_settings._compilerFilePath = T2W((LPTSTR)(LPCTSTR)m_strFilePath);
+	pApp->GetManager()->m_pSolution->_name = T2W((LPTSTR)(LPCTSTR)m_strSolutionName);
 
 	int index = m_cbConfiguration.GetCurSel();
 	CString strConfiguration;
 	m_cbConfiguration.GetLBText(index, strConfiguration);
-	pApp->GetManager()->m_pSolution->_properties.SetConfiguration((LPCTSTR)strConfiguration);
+	pApp->GetManager()->m_pSolution->_properties.SetConfiguration(T2W((LPTSTR)(LPCTSTR)strConfiguration));
 
 	index = m_cbPlatform.GetCurSel();
 	CString strPlatform;
 	m_cbPlatform.GetLBText(index, strPlatform);
-	pApp->GetManager()->m_pSolution->_properties.SetPlatform((LPCTSTR)strPlatform);
+	pApp->GetManager()->m_pSolution->_properties.SetPlatform(T2W((LPTSTR)(LPCTSTR)strPlatform));
 
 	index = m_cbTarget.GetCurSel();
 	CString strTarget;
 	m_cbTarget.GetLBText(index, strTarget);
-	pApp->GetManager()->m_pSolution->_properties.SetTarget((LPCTSTR)strTarget);
+	pApp->GetManager()->m_pSolution->_properties.SetTarget(T2W((LPTSTR)(LPCTSTR)strTarget));
 
 	if (m_bEmitDebugInformation == TRUE)
 		pApp->GetManager()->m_pSolution->_properties._emitDebugInformation = true;

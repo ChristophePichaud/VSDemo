@@ -136,7 +136,7 @@ bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBu
 	}
 
 	DWORD dwSize = 0;
-	char * lpszAnsiCmd = W2A(lpszCmd);
+	char * lpszAnsiCmd = T2A(lpszCmd);
 	//if (WriteFile(hCmdFile, lpszCmd, dwLen, &dwSize, NULL) == FALSE)
 	//if (WriteFile(hCmdFile, lpszCmd, _tcslen(lpszCmd) * sizeof(TCHAR), &dwSize, NULL) == FALSE)
 	if (WriteFile(hCmdFile, lpszAnsiCmd, strlen(lpszAnsiCmd) + 1, &dwSize, NULL) == FALSE)
@@ -235,11 +235,14 @@ bool CFileManager::ExecuteCommand(LPTSTR lpszCmd, LPSTR *lpszBuffer, DWORD *dwBu
 void CFileManager::LoadFile(CCodeFile * pCode)
 {
 	CVisualStudioDemoApp * pApp = (CVisualStudioDemoApp *)AfxGetApp();
-	pApp->m_pDocTemplateCpp->OpenDocumentFile(pCode->_path.c_str());
+	LPTSTR lpszPath = (LPTSTR)(LPCTSTR) (pCode->_path.c_str());
+	pApp->m_pDocTemplateCpp->OpenDocumentFile(lpszPath);
 }
 
 CString CFileManager::SearchDrive(const CString& strFile, const CString& strFilePath, const bool& bRecursive, const bool& bStopWhenFound, HTREEITEM parent)
 {
+	USES_CONVERSION;
+
 	CWnd * pWnd = AfxGetMainWnd();
 	CMainFrame * pMainFrame = (CMainFrame *)pWnd;
 
@@ -279,8 +282,8 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
 																			  /// TODO
 																			  // ADD TO COLLECTION TYPE
 					std::shared_ptr<CCodeFile> cf = std::make_shared<CCodeFile>();
-					cf->_name = strTheNameOfTheFile; //strFile;
-					cf->_path = strFoundFilePath;
+					cf->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile); //strFile;
+					cf->_path = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
 
 					pMainFrame->GetManager()->m_pSolution->AddFileToProject(cf);
 					//this->UpdateSolution(cf);
@@ -301,8 +304,10 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
 
 CString CFileManager::GetSolutionName()
 {
-	CString strWorkingDir = m_pSolution->_properties._workingDirectory.c_str();
-	CString strSolutionName = m_pSolution->_name.c_str();
+	USES_CONVERSION;
+
+	CString strWorkingDir = W2T((LPTSTR)(m_pSolution->_properties._workingDirectory.c_str()));
+	CString strSolutionName = W2T((LPTSTR)(m_pSolution->_name.c_str()));
 
 	CString strIniFile;
 	strIniFile.Format(_T("%s\\Solution_%s.ini"), strWorkingDir, strSolutionName);
@@ -316,13 +321,13 @@ bool CFileManager::BuildTheSolution()
 	CWnd * pWnd = AfxGetMainWnd();
 	CMainFrame * pMainFrame = (CMainFrame *)pWnd;
 
-	CString strCompilerFilePath = m_pSolution->_settings._compilerFilePath.c_str();
-	CString strWorkingDir = m_pSolution->_properties._workingDirectory.c_str();
-	CString strSolutionName = m_pSolution->_name.c_str();
+	CString strCompilerFilePath = (LPTSTR)(LPCTSTR) m_pSolution->_settings._compilerFilePath.c_str();
+	CString strWorkingDir = (LPTSTR)(LPCTSTR)m_pSolution->_properties._workingDirectory.c_str();
+	CString strSolutionName = (LPTSTR)(LPCTSTR)m_pSolution->_name.c_str();
 	//CString strProjectName = m_pSolution->_project._name.c_str();
-	CString strTarget = m_pSolution->_properties._target.c_str();
-	CString strConfiguration = m_pSolution->_properties._configuration.c_str();
-	CString strPlatform = m_pSolution->_properties._platform.c_str();
+	CString strTarget = (LPTSTR)(LPCTSTR)m_pSolution->_properties._target.c_str();
+	CString strConfiguration = (LPTSTR)(LPCTSTR)m_pSolution->_properties._configuration.c_str();
+	CString strPlatform = (LPTSTR)(LPCTSTR)m_pSolution->_properties._platform.c_str();
 	bool bEmitDebuggingInfomration = m_pSolution->_properties._emitDebugInformation;
 
 	//
@@ -332,12 +337,12 @@ bool CFileManager::BuildTheSolution()
 	CString strDebugFolder;
 	strDebugFolder.Format(_T("%s\\Debug"), strWorkingDir);
 	::CreateDirectory((LPCTSTR)strDebugFolder, NULL);
-	m_pSolution->_project._debugFolder = (LPCTSTR)strDebugFolder;
+	m_pSolution->_project._debugFolder = T2W((LPTSTR)(LPCTSTR)strDebugFolder);
 
 	CString strReleaseFolder;
 	strReleaseFolder.Format(_T("%s\\Release"), strWorkingDir);
 	::CreateDirectory((LPCTSTR)strReleaseFolder, NULL);
-	m_pSolution->_project._releaseFolder = (LPCTSTR)strReleaseFolder;
+	m_pSolution->_project._releaseFolder = T2W((LPTSTR)(LPCTSTR)strReleaseFolder);
 
 	//
 	// Determine a exe, dll or module
@@ -388,7 +393,7 @@ bool CFileManager::BuildTheSolution()
 
 	CString strOutput;
 	strOutput.Format(_T("%s\\%s.%s"), strOutputFolder, strSolutionName, strExt);
-	m_pSolution->_project._outputAssembly = (LPCTSTR)strOutput;
+	m_pSolution->_project._outputAssembly = T2W((LPTSTR)(LPCTSTR)strOutput);
 
 	//
 	// Output for Roslyn
@@ -431,7 +436,7 @@ bool CFileManager::BuildTheSolution()
 
 	for (auto file : m_pSolution->_project._files)
 	{
-		LPTSTR lpszExt = ::PathFindExtension(file->_name.c_str());
+		LPTSTR lpszExt = ::PathFindExtension(W2T((LPTSTR)(file->_name.c_str())));
 		CString strExt = lpszExt;
 		if (strExt != _T(".cs"))
 			continue;
@@ -468,7 +473,7 @@ bool CFileManager::BuildTheSolution()
 	// Copy references
 	for (auto file : m_pSolution->_project._references)
 	{
-		LPCTSTR lpszSource = file->_path.c_str();
+		LPCTSTR lpszSource = W2T((LPTSTR)(file->_path.c_str()));
 		CString strDestination;
 		strDestination.Format(_T("%s\\%s"), strOutputFolder, file->_name.c_str());
 		LPCTSTR lpszDest = (LPCTSTR)strDestination;
@@ -498,7 +503,8 @@ bool CFileManager::BuildTheSolution()
 		if (s.empty())
 			continue;
 
-		pMainFrame->m_wndOutputView.AddString(A2W(s.c_str()));
+		CString line = CString(s.c_str());
+		pMainFrame->m_wndOutputView.AddString(line);
 	}
 
 	//strMsg.Format(_T("Return code: %ld"), dwExit);
@@ -527,14 +533,16 @@ bool CFileManager::BuildTheSolution()
 
 bool CFileManager::SaveSolution()
 {
-	CString strWorkingDir = m_pSolution->_properties._workingDirectory.c_str();
+	USES_CONVERSION;
+
+	CString strWorkingDir = W2T((LPTSTR)(m_pSolution->_properties._workingDirectory.c_str()));
 	if (strWorkingDir.IsEmpty())	
 	{
 		AfxMessageBox(_T("Go to Project Properties and Set Working Folder for the Solution"));
 		return false;
 	}
 
-	CString strSolutionName = m_pSolution->_name.c_str();
+	CString strSolutionName = W2T((LPTSTR)(m_pSolution->_name.c_str()));
 	if (strSolutionName.IsEmpty())
 	{
 		AfxMessageBox(_T("Go to Project Properties and Set Solution Name"));
@@ -591,6 +599,8 @@ bool CFileManager::SaveSolution()
 
 bool CFileManager::OpenSolution()
 {
+	USES_CONVERSION;
+
 	CWnd * pWnd = AfxGetMainWnd();
 	CMainFrame * pMainFrame = (CMainFrame *)pWnd;
 
@@ -608,19 +618,19 @@ bool CFileManager::OpenSolution()
 	TCHAR lpszBuffer[255];
 	DWORD dwCount = sizeof(TCHAR) * 255;
 	::GetPrivateProfileString(_T("Solution"), _T("Name"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_name = lpszBuffer;
+	m_pSolution->_name = T2W(lpszBuffer);
 	::GetPrivateProfileString(_T("Solution"), _T("WorkingDir"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_properties._workingDirectory = lpszBuffer;
+	m_pSolution->_properties._workingDirectory = T2W(lpszBuffer);
 	::GetPrivateProfileString(_T("Solution"), _T("CompilerPath"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_settings._compilerFilePath = lpszBuffer;
+	m_pSolution->_settings._compilerFilePath = T2W(lpszBuffer);
 	::GetPrivateProfileString(_T("Solution"), _T("FileCount"), NULL, lpszBuffer, dwCount, strIniFile);
 	int count = _tstoi(lpszBuffer);
 	::GetPrivateProfileString(_T("Solution"), _T("Configuration"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_properties.SetConfiguration(lpszBuffer);
+	m_pSolution->_properties.SetConfiguration(T2W(lpszBuffer));
 	::GetPrivateProfileString(_T("Solution"), _T("Platform"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_properties.SetPlatform(lpszBuffer);
+	m_pSolution->_properties.SetPlatform(T2W(lpszBuffer));
 	::GetPrivateProfileString(_T("Solution"), _T("Target"), NULL, lpszBuffer, dwCount, strIniFile);
-	m_pSolution->_properties.SetTarget(lpszBuffer);
+	m_pSolution->_properties.SetTarget(T2W(lpszBuffer));
 	::GetPrivateProfileString(_T("Solution"), _T("ReferenceCount"), NULL, lpszBuffer, dwCount, strIniFile);
 	int countRef = _tstoi(lpszBuffer);
 
@@ -632,8 +642,8 @@ bool CFileManager::OpenSolution()
 		::GetPrivateProfileString(_T("Solution"), str, NULL, lpszBuffer, dwCount, strIniFile);
 
 		std::shared_ptr<CCodeFile> cf = std::make_shared<CCodeFile>();
-		cf->_name = ::PathFindFileName(lpszBuffer);
-		cf->_path = lpszBuffer;
+		cf->_name = T2W(::PathFindFileName(lpszBuffer));
+		cf->_path = T2W(lpszBuffer);
 
 		m_pSolution->AddFileToProject(cf);
 		this->UpdateSolution(cf);
@@ -647,8 +657,8 @@ bool CFileManager::OpenSolution()
 		::GetPrivateProfileString(_T("Solution"), str, NULL, lpszBuffer, dwCount, strIniFile);
 
 		std::shared_ptr<CAssemblyFile> af = std::make_shared<CAssemblyFile>();
-		af->_name = ::PathFindFileName(lpszBuffer);
-		af->_path = lpszBuffer;
+		af->_name = T2W(::PathFindFileName(lpszBuffer));
+		af->_path = T2W(lpszBuffer);
 
 		m_pSolution->AddReferenceToProject(af);
 		pMainFrame->UpdateSolution(af);
@@ -667,12 +677,14 @@ void CFileManager::ClearSolution()
 	// Solution items
 	m_pSolution->_project._files.clear();
 	m_pSolution->_project._references.clear();
-	m_pSolution->_name = _T("");
-	m_pSolution->_properties._workingDirectory = _T("");
+	m_pSolution->_name = L"";
+	m_pSolution->_properties._workingDirectory = L"";
 }
 
 void CFileManager::RunProgram()
 {
-	CString str = m_pSolution->_project._outputAssembly.c_str();
+	USES_CONVERSION;
+
+	CString str = W2T((LPTSTR)m_pSolution->_project._outputAssembly.c_str());
 	ExecuteCommand((LPTSTR)(LPCTSTR)str);
 }

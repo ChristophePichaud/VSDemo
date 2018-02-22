@@ -56,6 +56,8 @@ void CProjectReferencesDialog::OnClickedGAC()
 
 void CProjectReferencesDialog::OnClickedFill()
 {
+	USES_CONVERSION;
+
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 
@@ -73,7 +75,8 @@ void CProjectReferencesDialog::OnClickedFill()
 
 	for (auto element : m_vData)
 	{
-		int index = m_lstAssemblies.AddString(element->_name.c_str());
+		LPTSTR lpsz = W2T((LPTSTR)element->_name.c_str());
+		int index = m_lstAssemblies.AddString(lpsz);
 		m_lstAssemblies.SetItemData(index, (DWORD_PTR)(element.get()));
 	}
 }
@@ -102,6 +105,7 @@ void CProjectReferencesDialog::OnBnClickedOk()
 
 void CProjectReferencesDialog::OnClickedBrowseAssembly()
 {
+	USES_CONVERSION;
 	// TODO: Add your control notification handler code here
 	CFileDialog dlg(TRUE);
 	if (dlg.DoModal() == IDCANCEL)
@@ -113,8 +117,8 @@ void CProjectReferencesDialog::OnClickedBrowseAssembly()
 	strFile.Format(_T("%s\\%s"), strPath, strFileName);
 
 	std::shared_ptr<CAssemblyFile> pAsm = std::make_shared<CAssemblyFile>();
-	pAsm->_name = strFileName;
-	pAsm->_path = strFile;
+	pAsm->_name = T2W((LPTSTR)(LPCTSTR)strFileName);
+	pAsm->_path = T2W((LPTSTR)(LPCTSTR)strFile);
 
 	CVisualStudioDemoApp * pApp = (CVisualStudioDemoApp *)AfxGetApp();
 	pApp->GetManager()->m_pSolution->AddReferenceToProject(pAsm);

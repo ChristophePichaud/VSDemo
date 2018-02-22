@@ -1025,6 +1025,7 @@ void CMainFrame::CloseAllDocuments()
 
 void CMainFrame::OnFileAddExisting()
 {
+	USES_CONVERSION;
 	// TODO: Add your command handler code here
 	CFileDialog dlg(TRUE);
 	if (dlg.DoModal() == IDCANCEL)
@@ -1036,8 +1037,8 @@ void CMainFrame::OnFileAddExisting()
 	strFile.Format(_T("%s\\%s"), strPath, strFileName);
 
 	std::shared_ptr<CCodeFile> cf = std::make_shared<CCodeFile>();
-	cf->_name = strFileName;
-	cf->_path = strFile;
+	cf->_name = T2W((LPTSTR)(LPCTSTR)strFileName);
+	cf->_path = T2W((LPTSTR)(LPCTSTR)strFile);
 
 	GetManager()->m_pSolution->AddFileToProject(cf);
 	GetManager()->UpdateSolution(cf);

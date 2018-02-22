@@ -13,6 +13,8 @@ CAssemblyHelper::~CAssemblyHelper()
 
 CString CAssemblyHelper::SearchDrive(const CString& strFile, const CString& strFilePath, const bool& bRecursive, std::vector<std::shared_ptr<CAssemblyFile>> & vData)
 {
+	USES_CONVERSION;
+
 	CString strFoundFilePath;
 	WIN32_FIND_DATA file;
 
@@ -38,7 +40,7 @@ CString CAssemblyHelper::SearchDrive(const CString& strFile, const CString& strF
 				strFoundFilePath = strPathToSearch + strTheNameOfTheFile; //strFile;
 
 				LPTSTR lpszExt = ::PathFindExtension((LPCTSTR)strFoundFilePath);
-				CString strExt = lpszExt;
+				CStringW strExt = T2W(lpszExt);
 				if (strExt != _T(".dll"))
 					continue;
 				
@@ -47,8 +49,8 @@ CString CAssemblyHelper::SearchDrive(const CString& strFile, const CString& strF
 				//	continue;
 
 				std::shared_ptr<CAssemblyFile> pAsm = std::make_shared<CAssemblyFile>();
-				pAsm->_name = strTheNameOfTheFile;
-				pAsm->_path = strFoundFilePath;
+				pAsm->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile);
+				pAsm->_path = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
 
 				vData.push_back(pAsm);
 			}

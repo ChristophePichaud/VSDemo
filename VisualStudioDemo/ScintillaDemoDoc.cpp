@@ -36,6 +36,8 @@ void CScintillaDemoDoc::Dump(CDumpContext& dc) const
 
 BOOL CScintillaDemoDoc::OnNewDocument()
 {
+	USES_CONVERSION;
+
 	CFileNewDialog dlg;
 	if (dlg.DoModal() == IDCANCEL)
 		return FALSE;
@@ -57,8 +59,8 @@ BOOL CScintillaDemoDoc::OnNewDocument()
 	this->SetModifiedFlag(FALSE);
 
 	std::shared_ptr<CCodeFile> cf = std::make_shared<CCodeFile>();
-	cf->_name = lpszFileName;
-	cf->_path = strFN;
+	cf->_name = T2W((LPTSTR)(LPCTSTR)lpszFileName);
+	cf->_path = T2W((LPTSTR)(LPCTSTR)strFN);
 
 	this->SetTitle(lpszFileName);
 

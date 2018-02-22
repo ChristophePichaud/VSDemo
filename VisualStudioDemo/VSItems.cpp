@@ -3,18 +3,18 @@
 #include "VisualStudioDemo.h"
 #include "ScintillaDemoDoc.h"
 
-const std::wstring CConfiguration::debug = _T("debug");
-const std::wstring CConfiguration::release = _T("release");
-const std::wstring CPlatform::x86 = _T("x86");
-const std::wstring CPlatform::x64 = _T("x64");
-const std::wstring CPlatform::anycpu = _T("anycpu");
-const std::wstring CTarget::exe = _T("exe");
-const std::wstring CTarget::winexe = _T("winexe");
-const std::wstring CTarget::library = _T("library");
-const std::wstring CTarget::module = _T("module");
-const std::wstring CExtension::exe = _T("exe");
-const std::wstring CExtension::dll = _T("dll");
-const std::wstring CExtension::module = _T(".o");
+const std::wstring CConfiguration::debug = L"debug";
+const std::wstring CConfiguration::release = L"release";
+const std::wstring CPlatform::x86 = L"x86";
+const std::wstring CPlatform::x64 = L"x64";
+const std::wstring CPlatform::anycpu = L"anycpu";
+const std::wstring CTarget::exe = L"exe";
+const std::wstring CTarget::winexe = L"winexe";
+const std::wstring CTarget::library = L"library";
+const std::wstring CTarget::module = L"module";
+const std::wstring CExtension::exe = L"exe";
+const std::wstring CExtension::dll = L"dll";
+const std::wstring CExtension::module = L".o";
 
 
 CSolution::CSolution()
