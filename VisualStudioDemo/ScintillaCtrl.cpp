@@ -1917,12 +1917,12 @@ int CScintillaCtrl::GetWhitespaceSize()
 
 void CScintillaCtrl::SetStyleBits(_In_ int bits)
 {
-  Call(SCI_SETSTYLEBITS, static_cast<WPARAM>(bits), 0);
+//  Call(SCI_SETSTYLEBITS, static_cast<WPARAM>(bits), 0);
 }
 
 int CScintillaCtrl::GetStyleBits()
 {
-  return static_cast<int>(Call(SCI_GETSTYLEBITS, 0, 0));
+//  return static_cast<int>(Call(SCI_GETSTYLEBITS, 0, 0));
 }
 
 void CScintillaCtrl::SetLineState(_In_ int line, _In_ int state)
@@ -4602,7 +4602,7 @@ int CScintillaCtrl::GetPropertyInt(_In_z_ const char* key, _In_ int defaultValue
 
 int CScintillaCtrl::GetStyleBitsNeeded()
 {
-  return static_cast<int>(Call(SCI_GETSTYLEBITSNEEDED, 0, 0));
+//  return static_cast<int>(Call(SCI_GETSTYLEBITSNEEDED, 0, 0));
 }
 
 int CScintillaCtrl::GetLexerLanguage(_Inout_opt_ char* language)
