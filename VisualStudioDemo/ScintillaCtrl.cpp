@@ -1,5 +1,5 @@
 /*
-Module : ScintillaCtrl.CPP
+Module : ScintillaCtrl.cpp
 Purpose: Defines the implementation for an MFC wrapper class for the Scintilla edit control (www.scintilla.org)
 Created: PJN / 19-03-2004
 History: PJN / 19-03-2004 1. Initial implementation synchronized to the v1.59 release of Scintilla
@@ -140,7 +140,7 @@ History: PJN / 19-03-2004 1. Initial implementation synchronized to the v1.59 re
                           SCI_SETCARETLINEVISIBLEALWAYS.
                           3. The classes are now encapsulated in a Scintilla namespace if the SCI_NAMESPACE define
                           is defined. This is consistent with how the scintilla.h header file operates in the 
-                          presence of this define. Thanks to Markus Nißl for prompting this update.
+                          presence of this define. Thanks to Markus Nissl for prompting this update.
                           4. Updated the sample app to compile when the SCI_NAMESPACE define is defined.
                           5. The sample app is now built by default with the SCI_NAMESPACE defined. This means that all the 
                           classes of the author will appear in the "Scintilla" namespace.
@@ -207,8 +207,58 @@ History: PJN / 19-03-2004 1. Initial implementation synchronized to the v1.59 re
          PJN / 31-08-2017 1. Updated class to work with Scintilla v4.0.0. New messages wrapped include: SCI_GETNAMEDSTYLES, SCI_NAMEOFSTYLE,
                           SCI_TAGSOFSTYLE & SCI_DESCRIPTIONOFSTYLE. Messages removed include SCI_GETTWOPHASEDRAW & SCI_SETTWOPHASEDRAW
                           2. Fixed up a number of compiler warnings when the code is compiled for x64
+         PJN / 27-12-2017 1. Updated class to work with Scintilla v4.0.2. Some messages have been removed in 4.0.2 including SCI_SETSTYLEBITS,
+                          SCI_GETSTYLEBITS & SCI_GETSTYLEBITSNEEDED.
+         PJN / 03-01-2018 1. Updated copyright details.
+                          2. Removed Unicode versions of MarginSetStyles & AnnotationSetStyles methods as these methods take byte buffers
+                          and do not take text data. Thanks to Karagoez Yusuf for reporting this issue.
+         PJN / 18-03-2018 1. Updated class to work with Scintilla v4.0.3. New parameters to SCI_CREATEDOCUMENT & SCI_CREATELOADER messages.
+                          New messages wrapped include: SCI_GETMOVEEXTENDSSELECTION message, SCI_GETBIDIRECTIONAL & SCI_SETBIDIRECTIONAL
+                          2. SCI_ADDREFDOCUMENT and SCI_RELEASEDOCUMENT wrappers now use void* for the document parameter.
+         PJN / 03-05-2018 1. Verified the code works with the latest Scintilla v4.0.4. No new messages were added for this release of
+                          scintilla.
+         PJN / 14-07-2018 1. Fixed a number of C++ core guidelines compiler warnings. These changes mean that
+                          the code will now only compile on VC 2017 or later.
+                          2. Code page is now explicitly set to ANSI when building for ANSI. This is necessary because as of Scintilla 4 the
+                          default code page is now UTF-8. Thanks to Karagoez Yusuf for reporting this issue.
+                          3. CScintillaCtrl::SetProperty has been renamed SetScintillaProperty to avoid clashing with CWnd::SetProperty
+                          4. CScintillaCtrl::GetProperty has been renamed GetScintillaProperty to avoid clashing with CWnd::GetProperty
+                          5. Updated class to work with Scintilla v4.1.0. New messages wrapped include: SCI_GETDOCUMENTOPTIONS
+         PJN / 09-09-2018 1. Fixed a number of compiler warnings when using VS 2017 15.8.2
+                          2. Updated class to work with Scintilla v4.1.1. New messages wrapped include: SCI_COUNTCODEUNITS,
+                          SCI_POSITIONRELATIVECODEUNITS, SCI_GETLINECHARACTERINDEX, SCI_ALLOCATELINECHARACTERINDEX, 
+                          SCI_RELEASELINECHARACTERINDEX, SCI_LINEFROMINDEXPOSITION & SCI_INDEXPOSITIONFROMLINE
+         PJN / 19-01-2019 1. Updated copyright details
+                          2. Updated class to work with Scintilla v4.1.3. New messages wrapped include: SCI_SETCOMMANDEVENTS & 
+                          SCI_GETCOMMANDEVENTS.
+                          3. Added code to suppress C4263 off by default compiler warning. Thanks to Karagoez Yusuf for reporting this issue.
+         PJN / 23-02-2019 1. Fixed a number of compiler warnings when the code is compiled with VS 2019 Preview
+         PJN / 02-04-2019 1. Verified the code works with the latest Scintilla v4.1.4. No new messages were added for this release of
+                          scintilla.
+         PJN / 25-06-2019 1. Updated class to work with Scintilla v4.1.7. New messages wrapped include: SCI_SETCHARACTERCATEGORYOPTIMIZATION,
+                          SCI_GETCHARACTERCATEGORYOPTIMIZATION, SCI_FOLDDISPLAYTEXTGETSTYLE, SCI_SETDEFAULTFOLDDISPLAYTEXT &
+                          SCI_GETDEFAULTFOLDDISPLAYTEXT.
+         PJN / 23-08-2019 1. Updated class to work with Scintilla v4.2.0. Various API definitions have been updated to use Sci_Position 
+                          instead of int parameters. No new actual messages were added.
+         PJN / 03-11-2019 1. Updated class to work with Scintilla v4.2.1. New messages wrapper include: SCI_SETTABMINIMUMWIDTH and
+                          SCI_GETTABMINIMUMWIDTH.
+                          2. Updated initialization of various structs to use C++ 11 list initialization
+         PJN / 27-12-2019 1. Updated class to work with Scintilla v4.2.3. New messages wrapped include: SCI_SETTARGETSTARTVIRTUALSPACE, 
+                          SCI_GETTARGETSTARTVIRTUALSPACE, SCI_SETTARGETENDVIRTUALSPACE, SCI_GETTARGETENDVIRTUALSPACE, 
+                          SCI_GETSELECTIONNSTARTVIRTUALSPACE & SCI_GETSELECTIONNENDVIRTUALSPACE.
+                          2. Fixed various Clang-Tidy static code analysis warnings in the code.
+         PJN / 21-03-2020 1. Updated copyright details.
+                          2. Fixed more Clang-Tidy static code analysis warnings in the code.
+                          3. Updated class to work with Scintilla v4.3.2. New messages wrapped include: SCI_SETILEXER
+         PJN / 07-05-2020 1. Added missing static_casts in the GetSelectionNStartVirtualSpace and 
+                          GetSelectionNEndVirtualSpace methods. Thanks to Yusuf Karagöz for reporting this issue.
+                          2. Updated class to work with Scintilla v4.3.3. New messages wrapped include: SCI_MARKERHANDLEFROMLINE and 
+                          SCI_MARKERNUMBERFROMLINE.
+                          3. Changed two parameters to CallTipSetHlt method to be Sci_Position from int.
+                          4. Changed return value from IndicatorStart method to be Sci_Position from int.
+                          5. Changed return value from IndicatorEnd method to be Sci_Position from int.
 
-Copyright (c) 2004 - 2017 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2004 - 2020 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -218,12 +268,12 @@ You are allowed to include the source code in any product (commercial, shareware
 when your product is released in binary form. You are allowed to modify the source code in any way you want 
 except you cannot modify the copyright details at the top of each module. If you want to distribute source 
 code with your application, then you are only allowed to distribute versions released by the author. This is 
-to maintain a single distribution point for the source code. 
+to maintain a single distribution point for the source code.
 
 */
 
 
-/////////////////////////////////  Includes  //////////////////////////////////
+///////////////////////////////// Includes ////////////////////////////////////
 
 #include "stdafx.h"
 #include "ScintillaCtrl.h"
@@ -238,11 +288,12 @@ to maintain a single distribution point for the source code.
 
 ////////////////////////////////// Implementation /////////////////////////////
 
+#pragma warning(suppress: 26433 26440 26477)
 IMPLEMENT_DYNAMIC(CScintillaCtrl, CWnd)
 
-CScintillaCtrl::CScintillaCtrl() : m_DirectFunction(0),
-                                   m_DirectPointer(0),
-                                   m_bCallDirect(TRUE)
+CScintillaCtrl::CScintillaCtrl() noexcept : m_bCallDirect(TRUE),
+                                            m_DirectFunction(0),
+                                            m_DirectPointer(0)
 {
 }
 
@@ -255,9 +306,11 @@ BOOL CScintillaCtrl::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, U
   //Setup the direct access data
   SetupDirectAccess();
 
-  //If we are running as Unicode, then use the UTF8 codepage
+  //If we are running as Unicode, then use the UTF8 codepage else use the ANSI codepage
 #ifdef _UNICODE
   SetCodePage(SC_CP_UTF8);
+#else
+  SetCodePage(0);
 #endif //#ifdef _UNICODE
 
   return TRUE;
@@ -270,28 +323,25 @@ void CScintillaCtrl::SetupDirectAccess()
   m_DirectPointer = GetDirectPointer();
 }
 
-BOOL CScintillaCtrl::GetCallDirect() const
+BOOL CScintillaCtrl::GetCallDirect() const noexcept
 {
   return m_bCallDirect;
 }
 
-void CScintillaCtrl::SetCallDirect(_In_ BOOL bDirect)
+void CScintillaCtrl::SetCallDirect(_In_ BOOL bDirect) noexcept
 {
   m_bCallDirect = bDirect;
 }
 
-CScintillaCtrl::~CScintillaCtrl()
-{
-  DestroyWindow();
-}
-
 inline LRESULT CScintillaCtrl::Call(_In_ UINT message, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
+  //Validate our parameters
   ASSERT(::IsWindow(m_hWnd)); //Window must be valid
 
   if (m_bCallDirect)
   {
     ASSERT(m_DirectFunction); //Direct function must be valid
+#pragma warning(suppress: 26490)
     return (reinterpret_cast<SciFnDirect>(m_DirectFunction))(m_DirectPointer, message, wParam, lParam);
   }
   else
@@ -320,18 +370,20 @@ CStringA CScintillaCtrl::W2UTF8(_In_NLS_string_(nLength) const wchar_t* pszText,
 
   //Now recall with the buffer to get the converted text
   CStringA sUTF;
-  char* pszUTF8Text = sUTF.GetBuffer(nUTF8Length + 1); //include an extra byte because we may be null terminating the string ourselves
+#pragma warning(suppress: 26429)
+  char* const pszUTF8Text = sUTF.GetBuffer(nUTF8Length + 1); //include an extra byte because we may be null terminating the string ourselves
   int nCharsWritten = WideCharToMultiByte(CP_UTF8, 0, pszText, nLength, pszUTF8Text, nUTF8Length, nullptr, nullptr);
   
   //Ensure we null terminate the text if WideCharToMultiByte doesn't do it for us
   if (nLength != -1)
   {
+#pragma warning(suppress: 26496)
     AFXASSUME(nCharsWritten <= nUTF8Length);
+#pragma warning(suppress: 26481)
     pszUTF8Text[nCharsWritten] = '\0';
   }
-  
   sUTF.ReleaseBuffer();
-  
+
   return sUTF;
 }
 
@@ -346,16 +398,18 @@ CStringW CScintillaCtrl::UTF82W(_In_NLS_string_(nLength) const char* pszText, _I
 
   //Now recall with the buffer to get the converted text
   CStringW sWideString;
+#pragma warning(suppress: 26429)
   wchar_t* pszWText = sWideString.GetBuffer(nWideLength + 1); //include an extra byte because we may be null terminating the string ourselves
   int nCharsWritten = MultiByteToWideChar(CP_UTF8, 0, pszText, nLength, pszWText, nWideLength);
   
   //Ensure we null terminate the text if MultiByteToWideChar doesn't do it for us
   if (nLength != -1)
   {
+#pragma warning(suppress: 26496)
     AFXASSUME(nCharsWritten <= nWideLength);
+#pragma warning(suppress: 26481)
     pszWText[nCharsWritten] = '\0';
   }
-  
   sWideString.ReleaseBuffer();
 
   return sWideString;
@@ -391,11 +445,12 @@ void CScintillaCtrl::ChangeInsertion(_In_ int length, _In_z_ const wchar_t* text
 CStringW CScintillaCtrl::GetSelText()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = GetSelText(nullptr);
+  const Sci_Position nUTF8Length = GetSelText(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
-  GetSelText(sUTF8.GetBufferSetLength(nUTF8Length));
+#pragma warning(suppress: 26472)
+  GetSelText(sUTF8.GetBufferSetLength(static_cast<int>(nUTF8Length)));
   sUTF8.ReleaseBuffer();
 
   //Now convert the UTF8 text back to Unicode
@@ -405,13 +460,14 @@ CStringW CScintillaCtrl::GetSelText()
 CStringW CScintillaCtrl::GetCurLine()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = GetCurLine(0, nullptr);
+  const Sci_Position nUTF8Length = GetCurLine(0, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
-  GetCurLine(nUTF8Length, sUTF8.GetBufferSetLength(nUTF8Length));
+#pragma warning(suppress: 26472)
+  GetCurLine(nUTF8Length, sUTF8.GetBufferSetLength(static_cast<int>(nUTF8Length)));
   sUTF8.ReleaseBuffer();
-  
+
   return UTF82W(sUTF8, -1);
 }
 
@@ -479,13 +535,14 @@ void CScintillaCtrl::UserListShow(_In_ int listType, _In_z_ const wchar_t* itemL
 CStringW CScintillaCtrl::GetLine(_In_ int line)
 {
   //Work out the length of string to allocate
-  int nUTF8Length = LineLength(line);
+  const Sci_Position nUTF8Length = LineLength(line);
 
   //Call the function which does the work
   CStringA sUTF8;
-  GetLine(line, sUTF8.GetBufferSetLength(nUTF8Length));
+#pragma warning(suppress: 26472)
+  GetLine(line, sUTF8.GetBufferSetLength(static_cast<int>(nUTF8Length)));
   sUTF8.ReleaseBuffer();
-  
+
   return UTF82W(sUTF8, -1);
 }
 
@@ -510,7 +567,7 @@ void CScintillaCtrl::SetText(_In_z_ const wchar_t* text)
 CStringW CScintillaCtrl::GetText(_In_ int length)
 {
   //Work out the length of string to allocate
-  int nUTF8Length = length*4; //A Unicode character can take up to 4 octets when expressed as UTF8
+  const int nUTF8Length = length*4; //A Unicode character can take up to 4 octets when expressed as UTF8
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -523,28 +580,31 @@ CStringW CScintillaCtrl::GetText(_In_ int length)
   return sWideText.Left(length-1);
 }
 
-int CScintillaCtrl::ReplaceTarget(_In_ int length, _In_ const wchar_t* text)
+Sci_Position CScintillaCtrl::ReplaceTarget(_In_ Sci_Position length, _In_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
-  CStringA sUTF8(W2UTF8(text, length));
+#pragma warning(suppress: 26472)
+  CStringA sUTF8(W2UTF8(text, static_cast<int>(length)));
 
   //Call the native scintilla version of the function with the UTF8 text
   return ReplaceTarget(sUTF8.GetLength(), sUTF8);
 }
 
-int CScintillaCtrl::ReplaceTargetRE(_In_ int length, _In_ const wchar_t* text)
+Sci_Position CScintillaCtrl::ReplaceTargetRE(_In_ Sci_Position length, _In_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
-  CStringA sUTF8(W2UTF8(text, length));
+#pragma warning(suppress: 26472)
+  CStringA sUTF8(W2UTF8(text, static_cast<int>(length)));
 
   //Call the native scintilla version of the function with the UTF8 text
   return ReplaceTargetRE(sUTF8.GetLength(), sUTF8);
 }
 
-int CScintillaCtrl::SearchInTarget(_In_ int length, _In_ const wchar_t* text)
+Sci_Position CScintillaCtrl::SearchInTarget(_In_ Sci_Position length, _In_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
-  CStringA sUTF8(W2UTF8(text, length));
+#pragma warning(suppress: 26472)
+  CStringA sUTF8(W2UTF8(text, static_cast<int>(length)));
 
   //Call the native scintilla version of the function with the UTF8 text
   return SearchInTarget(sUTF8.GetLength(), sUTF8);
@@ -577,7 +637,7 @@ void CScintillaCtrl::AppendText(_In_ int length, _In_ const wchar_t* text)
   AppendText(sUTF8.GetLength(), sUTF8);
 }
 
-int CScintillaCtrl::SearchNext(_In_ int flags, _In_z_ const wchar_t* text)
+Sci_Position CScintillaCtrl::SearchNext(_In_ int flags, _In_z_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
   CStringA sUTF8(W2UTF8(text, -1));
@@ -586,7 +646,7 @@ int CScintillaCtrl::SearchNext(_In_ int flags, _In_z_ const wchar_t* text)
   return SearchNext(flags, sUTF8);
 }
 
-int CScintillaCtrl::SearchPrev(_In_ int flags, _In_z_ const wchar_t* text)
+Sci_Position CScintillaCtrl::SearchPrev(_In_ int flags, _In_z_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
   CStringA sUTF8(W2UTF8(text, -1));
@@ -613,14 +673,14 @@ void CScintillaCtrl::SetWhitespaceChars(_In_z_ const wchar_t* characters)
   SetWhitespaceChars(sUTF8);
 }
 
-void CScintillaCtrl::SetProperty(_In_z_ const wchar_t* key, _In_z_ const wchar_t* value)
+void CScintillaCtrl::SetScintillaProperty(_In_z_ const wchar_t* key, _In_z_ const wchar_t* value)
 {
   //Convert the unicode texts to UTF8
   CStringA sUTF8Key(W2UTF8(key, -1));
   CStringA sUTF8Value(W2UTF8(value, -1));
 
   //Call the native scintilla version of the function with the UTF8 text
-  SetProperty(sUTF8Key, sUTF8Value);
+  SetScintillaProperty(sUTF8Key, sUTF8Value);
 }
 
 void CScintillaCtrl::SetKeyWords(_In_ int keywordSet, _In_z_ const wchar_t* keyWords)
@@ -659,7 +719,7 @@ void CScintillaCtrl::LoadLexerLibrary(_In_z_ const wchar_t* path)
   LoadLexerLibrary(sUTF8);
 }
 
-CStringW CScintillaCtrl::GetProperty(_In_z_ const wchar_t* key)
+CStringW CScintillaCtrl::GetScintillaProperty(_In_z_ const wchar_t* key)
 {
   //Validate our parameters
   ASSERT(key);
@@ -668,11 +728,11 @@ CStringW CScintillaCtrl::GetProperty(_In_z_ const wchar_t* key)
   CStringA sUTF8Key(W2UTF8(key, -1));
 
   //Work out the length of string to allocate
-  int nUTF8ValueLength = GetProperty(sUTF8Key, 0);
+  const int nUTF8ValueLength = GetScintillaProperty(sUTF8Key, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8Value;
-  GetProperty(sUTF8Key, sUTF8Value.GetBufferSetLength(nUTF8ValueLength));
+  GetScintillaProperty(sUTF8Key, sUTF8Value.GetBufferSetLength(nUTF8ValueLength));
   sUTF8Value.ReleaseBuffer();
 
   return UTF82W(sUTF8Value, -1);
@@ -687,14 +747,14 @@ CStringW CScintillaCtrl::GetPropertyExpanded(_In_z_ const wchar_t* key)
   CStringA sUTF8Key(W2UTF8(key, -1));
 
   //Work out the length of string to allocate
-  int nUTF8ValueLength = GetPropertyExpanded(sUTF8Key, 0);
+  const int nUTF8ValueLength = GetPropertyExpanded(sUTF8Key, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8Value;
   GetPropertyExpanded(sUTF8Key, sUTF8Value.GetBufferSetLength(nUTF8ValueLength));
   sUTF8Value.ReleaseBuffer();
 
-  return UTF82W(sUTF8Value, -1);  
+  return UTF82W(sUTF8Value, -1);
 }
 
 int CScintillaCtrl::GetPropertyInt(_In_z_ const wchar_t* key, _In_ int defaultValue)
@@ -710,15 +770,11 @@ CStringW CScintillaCtrl::StyleGetFont(_In_ int style)
 {
   //Allocate a UTF8 buffer to contain the font name. See the notes for
   //SCI_STYLEGETFONT / SCI_STYLESETFONT on the reasons why we can use
-  //a statically sized buffer of 32 characters in size. Note it is 33 below
-  //to include space for the null terminator
-  char szUTF8FontName[33*4]; //A Unicode character can take up to 4 octets when expressed as UTF8
-  szUTF8FontName[0] = '\0';
-
-  //Call the native scintilla version of the function with a UTF8 text buffer
-  StyleGetFont(style, szUTF8FontName);
-
-  return UTF82W(szUTF8FontName, -1);
+  //a statically sized buffer of 32 characters in size
+  CStringA sUTF8FontName;
+  StyleGetFont(style, sUTF8FontName.GetBuffer(32*4));
+  sUTF8FontName.ReleaseBuffer();
+  return UTF82W(sUTF8FontName, -1);
 }
 
 void CScintillaCtrl::MarginSetText(_In_ int line, _In_z_ const wchar_t* text)
@@ -730,15 +786,6 @@ void CScintillaCtrl::MarginSetText(_In_ int line, _In_z_ const wchar_t* text)
   MarginSetText(line, sUTF8);
 }
 
-void CScintillaCtrl::MarginSetStyles(_In_ int line, _In_z_ const wchar_t* styles)
-{
-  //Convert the unicode text to UTF8
-  CStringA sUTF8(W2UTF8(styles, -1));
-
-  //Call the native scintilla version of the function with the UTF8 text
-  MarginSetStyles(line, sUTF8);
-}
-
 void CScintillaCtrl::AnnotationSetText(_In_ int line, _In_z_ const wchar_t* text)
 {
   //Convert the unicode text to UTF8
@@ -748,19 +795,10 @@ void CScintillaCtrl::AnnotationSetText(_In_ int line, _In_z_ const wchar_t* text
   AnnotationSetText(line, sUTF8);
 }
 
-void CScintillaCtrl::AnnotationSetStyles(_In_ int line, _In_z_ const wchar_t* styles)
-{
-  //Convert the unicode text to UTF8
-  CStringA sUTF8(W2UTF8(styles, -1));
-
-  //Call the native scintilla version of the function with the UTF8 text
-  AnnotationSetStyles(line, sUTF8);
-}
-
 CStringW CScintillaCtrl::AutoCGetCurrentText()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = AutoCGetCurrentText(nullptr);
+    const int nUTF8Length = AutoCGetCurrentText(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -774,7 +812,7 @@ CStringW CScintillaCtrl::AutoCGetCurrentText()
 CStringW CScintillaCtrl::GetLexerLanguage()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = GetLexerLanguage(nullptr);
+  const int nUTF8Length = GetLexerLanguage(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -788,7 +826,7 @@ CStringW CScintillaCtrl::GetLexerLanguage()
 CStringW CScintillaCtrl::PropertyNames()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = PropertyNames(nullptr);
+  const int nUTF8Length = PropertyNames(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -817,13 +855,22 @@ void CScintillaCtrl::ToggleFoldShowText(_In_ int line, _In_ const wchar_t* text)
   ToggleFoldShowText(line, sUTF8);
 }
 
+void CScintillaCtrl::SetDefaultFoldDisplayText(_In_z_ const wchar_t* text)
+{
+  //Convert the unicode text to UTF8
+  CStringA sUTF8(W2UTF8(text, -1));
+
+  //Call the native scintilla version of the function with the UTF8 text
+  SetDefaultFoldDisplayText(sUTF8);
+}
+
 CStringW CScintillaCtrl::DescribeProperty(_In_z_ const wchar_t* name)
 {
   //Convert the name value to UTF8
   CStringA sUTF8KName(W2UTF8(name, -1));
 
   //Work out the length of string to allocate
-  int nUTF8Length = DescribeProperty(sUTF8KName, nullptr);
+  const int nUTF8Length = DescribeProperty(sUTF8KName, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -837,7 +884,7 @@ CStringW CScintillaCtrl::DescribeProperty(_In_z_ const wchar_t* name)
 CStringW CScintillaCtrl::DescribeKeyWordSets()
 {
   //Work out the length of string to allocate
-  int nUTF8Length = DescribeKeyWordSets(nullptr);
+  const int nUTF8Length = DescribeKeyWordSets(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -851,20 +898,20 @@ CStringW CScintillaCtrl::DescribeKeyWordSets()
 CStringW CScintillaCtrl::GetTag(_In_ int tagNumber)
 {
   //Work out the length of string to allocate
-  int nUTF8Length = GetTag(tagNumber, nullptr);
+  const int nUTF8Length = GetTag(tagNumber, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
   GetTag(tagNumber, sUTF8.GetBufferSetLength(nUTF8Length));
   sUTF8.ReleaseBuffer();
-  
+
   return UTF82W(sUTF8, -1);
 }
 
 CStringW CScintillaCtrl::GetWordChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetWordChars(nullptr);
+  const int nValueLength = GetWordChars(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -877,7 +924,7 @@ CStringW CScintillaCtrl::GetWordChars()
 CStringW CScintillaCtrl::GetWhitespaceChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetWhitespaceChars(nullptr);
+  const int nValueLength = GetWhitespaceChars(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -890,7 +937,7 @@ CStringW CScintillaCtrl::GetWhitespaceChars()
 CStringW CScintillaCtrl::GetPunctuationChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetPunctuationChars(nullptr);
+  const int nValueLength = GetPunctuationChars(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
@@ -903,11 +950,12 @@ CStringW CScintillaCtrl::GetPunctuationChars()
 CStringW CScintillaCtrl::GetTargetText()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetTargetText(nullptr);
+  const Sci_Position nValueLength = GetTargetText(nullptr);
 
   //Call the function which does the work
   CStringA sUTF8;
-  GetTargetText(sUTF8.GetBufferSetLength(nValueLength));
+#pragma warning(suppress: 26472)
+  GetTargetText(sUTF8.GetBufferSetLength(static_cast<int>(nValueLength)));
   sUTF8.ReleaseBuffer();
 
   return UTF82W(sUTF8, -1);
@@ -916,7 +964,7 @@ CStringW CScintillaCtrl::GetTargetText()
 CStringW CScintillaCtrl::NameOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nUTF8ValueLength = NameOfStyle(style, nullptr);
+  const int nUTF8ValueLength = NameOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8Value;
@@ -929,7 +977,7 @@ CStringW CScintillaCtrl::NameOfStyle(_In_ int style)
 CStringW CScintillaCtrl::TagsOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nUTF8ValueLength = TagsOfStyle(style, nullptr);
+  const int nUTF8ValueLength = TagsOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8Value;
@@ -942,7 +990,7 @@ CStringW CScintillaCtrl::TagsOfStyle(_In_ int style)
 CStringW CScintillaCtrl::DescriptionOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nUTF8ValueLength = DescriptionOfStyle(style, nullptr);
+  const int nUTF8ValueLength = DescriptionOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sUTF8Value;
@@ -952,16 +1000,31 @@ CStringW CScintillaCtrl::DescriptionOfStyle(_In_ int style)
   return UTF82W(sUTF8Value, -1);
 }
 
+CStringW CScintillaCtrl::GetDefaultFoldDisplayText()
+{
+  //Work out the length of string to allocate
+  const int nUTF8Length = GetDefaultFoldDisplayText(nullptr);
+
+  //Call the function which does the work
+  CStringA sUTF8;
+  GetDefaultFoldDisplayText(sUTF8.GetBufferSetLength(nUTF8Length));
+  sUTF8.ReleaseBuffer();
+
+  return UTF82W(sUTF8, -1);
+}
+
+
 #else
 
 CStringA CScintillaCtrl::GetSelText()
 {
   //Work out the length of string to allocate
-  int nLength = GetSelText(nullptr);
+  const Sci_Position nLength = GetSelText(nullptr);
 
   //Call the function which does the work
   CStringA sSelText;
-  GetSelText(sSelText.GetBufferSetLength(nLength));
+#pragma warning(suppress: 26472)
+  GetSelText(sSelText.GetBufferSetLength(static_cast<int>(nLength)));
   sSelText.ReleaseBuffer();
   return sSelText;
 }
@@ -970,11 +1033,11 @@ CStringA CScintillaCtrl::GetCurLine()
 {
   //Call the function which does the work
   CStringA sCurLine;
-  int nLength = GetCurLine(0, nullptr);
-  char* pszCurLine = sCurLine.GetBufferSetLength(nLength);
+  const Sci_Position nLength = GetCurLine(0, nullptr);
+#pragma warning(suppress: 26472)
+  char* pszCurLine = sCurLine.GetBufferSetLength(static_cast<int>(nLength));
   GetCurLine(nLength, pszCurLine);
   sCurLine.ReleaseBuffer();
-  
   return sCurLine;
 }
 
@@ -982,25 +1045,25 @@ CStringA CScintillaCtrl::GetLine(_In_ int line)
 {
   //Call the function which does the work
   CStringA sLine;
-  int nLength = LineLength(line);
-  char* pszLine = sLine.GetBufferSetLength(nLength);
+  const Sci_Position nLength = LineLength(line);
+#pragma warning(suppress: 26472)
+  char* pszLine = sLine.GetBufferSetLength(static_cast<int>(nLength));
   GetLine(line, pszLine);
   sLine.ReleaseBuffer();
-  
   return sLine;
 }
 
-CStringA CScintillaCtrl::GetProperty(_In_z_ const char* key)
+CStringA CScintillaCtrl::GetScintillaProperty(_In_z_ const char* key)
 {
   //Validate our parameters
   ASSERT(key);
 
   //Work out the length of string to allocate
-  int nValueLength = GetProperty(key, nullptr);
+  const int nValueLength = GetScintillaProperty(key, nullptr);
 
   //Call the function which does the work
   CStringA sValue;
-  GetProperty(key, sValue.GetBufferSetLength(nValueLength));
+  GetScintillaProperty(key, sValue.GetBufferSetLength(nValueLength));
   sValue.ReleaseBuffer();
 
   return sValue;
@@ -1022,35 +1085,31 @@ CStringA CScintillaCtrl::GetPropertyExpanded(_In_z_ const char* key)
   ASSERT(key);
 
   //Work out the length of string to allocate
-  int nValueLength = GetPropertyExpanded(key, nullptr);
+  const int nValueLength = GetPropertyExpanded(key, nullptr);
 
   //Call the function which does the work
   CStringA sValue;
   GetPropertyExpanded(key, sValue.GetBufferSetLength(nValueLength));
   sValue.ReleaseBuffer();
 
-  return sValue;  
+  return sValue;
 }
 
 CStringA CScintillaCtrl::StyleGetFont(_In_ int style)
 {
   //Allocate a buffer to contain the font name. See the notes for
   //SCI_STYLEGETFONT / SCI_STYLESETFONT on the reasons why we can use
-  //a statically sized buffer of 32 characters in size. Note it is 33 below
-  //to include space for the null terminator
-  char szFontName[33];
-  szFontName[0] = '\0';
-
-  //Call the native scintilla version of the function with a text buffer
-  StyleGetFont(style, szFontName);
-
-  return szFontName;
+  //a statically sized buffer of 32 characters in size
+  CStringA sFontName;
+  StyleGetFont(style, sFontName.GetBuffer(32));
+  sFontName.ReleaseBuffer();
+  return sFontName;
 }
 
 CStringA CScintillaCtrl::AutoCGetCurrentText()
 {
   //Work out the length of string to allocate
-  int nLength = AutoCGetCurrentText(nullptr);
+  const int nLength = AutoCGetCurrentText(nullptr);
 
   //Call the function which does the work
   CStringA sText;
@@ -1063,7 +1122,7 @@ CStringA CScintillaCtrl::AutoCGetCurrentText()
 CStringA CScintillaCtrl::GetLexerLanguage()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetLexerLanguage(nullptr);
+  const int nValueLength = GetLexerLanguage(nullptr);
 
   //Call the function which does the work
   CStringA sLanguage;
@@ -1076,7 +1135,7 @@ CStringA CScintillaCtrl::GetLexerLanguage()
 CStringA CScintillaCtrl::PropertyNames()
 {
   //Work out the length of string to allocate
-  int nValueLength = PropertyNames(nullptr);
+  const int nValueLength = PropertyNames(nullptr);
 
   //Call the function which does the work
   CStringA sPropertyNames;
@@ -1089,7 +1148,7 @@ CStringA CScintillaCtrl::PropertyNames()
 CStringA CScintillaCtrl::DescribeProperty(_In_z_ const char* name)
 {
   //Work out the length of string to allocate
-  int nValueLength = DescribeProperty(name, nullptr);
+  const int nValueLength = DescribeProperty(name, nullptr);
 
   //Call the function which does the work
   CStringA sDescribeProperty;
@@ -1102,7 +1161,7 @@ CStringA CScintillaCtrl::DescribeProperty(_In_z_ const char* name)
 CStringA CScintillaCtrl::DescribeKeyWordSets()
 {
   //Work out the length of string to allocate
-  int nValueLength = DescribeKeyWordSets(nullptr);
+  const int nValueLength = DescribeKeyWordSets(nullptr);
 
   //Call the function which does the work
   CStringA sDescribeKeyWordSets;
@@ -1115,7 +1174,7 @@ CStringA CScintillaCtrl::DescribeKeyWordSets()
 CStringA CScintillaCtrl::GetTag(_In_ int tagNumber)
 {
   //Work out the length of string to allocate
-  int nValueLength = GetTag(tagNumber, nullptr);
+  const int nValueLength = GetTag(tagNumber, nullptr);
 
   //Call the function which does the work
   CStringA sTag;
@@ -1128,7 +1187,7 @@ CStringA CScintillaCtrl::GetTag(_In_ int tagNumber)
 CStringA CScintillaCtrl::GetWordChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetWordChars(nullptr);
+  const int nValueLength = GetWordChars(nullptr);
 
   //Call the function which does the work
   CStringA sWordChars;
@@ -1141,7 +1200,7 @@ CStringA CScintillaCtrl::GetWordChars()
 CStringA CScintillaCtrl::GetWhitespaceChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetWhitespaceChars(nullptr);
+  const int nValueLength = GetWhitespaceChars(nullptr);
 
   //Call the function which does the work
   CStringA sWhitespaceChars;
@@ -1154,7 +1213,7 @@ CStringA CScintillaCtrl::GetWhitespaceChars()
 CStringA CScintillaCtrl::GetPunctuationChars()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetPunctuationChars(nullptr);
+  const int nValueLength = GetPunctuationChars(nullptr);
 
   //Call the function which does the work
   CStringA sPunctuationChars;
@@ -1167,11 +1226,12 @@ CStringA CScintillaCtrl::GetPunctuationChars()
 CStringA CScintillaCtrl::GetTargetText()
 {
   //Work out the length of string to allocate
-  int nValueLength = GetTargetText(nullptr);
+  const Sci_Position nValueLength = GetTargetText(nullptr);
 
   //Call the function which does the work
   CStringA sTargetText;
-  GetTargetText(sTargetText.GetBufferSetLength(nValueLength));
+#pragma warning(suppress: 26472)
+  GetTargetText(sTargetText.GetBufferSetLength(static_cast<int>(nValueLength)));
   sTargetText.ReleaseBuffer();
 
   return sTargetText;
@@ -1180,7 +1240,7 @@ CStringA CScintillaCtrl::GetTargetText()
 CStringA CScintillaCtrl::NameOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nValueLength = NameOfStyle(style, nullptr);
+  const int nValueLength = NameOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sValue;
@@ -1193,7 +1253,7 @@ CStringA CScintillaCtrl::NameOfStyle(_In_ int style)
 CStringA CScintillaCtrl::TagsOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nValueLength = TagsOfStyle(style, nullptr);
+  const int nValueLength = TagsOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sValue;
@@ -1206,7 +1266,7 @@ CStringA CScintillaCtrl::TagsOfStyle(_In_ int style)
 CStringA CScintillaCtrl::DescriptionOfStyle(_In_ int style)
 {
   //Work out the length of string to allocate
-  int nValueLength = DescriptionOfStyle(style, nullptr);
+  const int nValueLength = DescriptionOfStyle(style, nullptr);
 
   //Call the function which does the work
   CStringA sValue;
@@ -1215,17 +1275,32 @@ CStringA CScintillaCtrl::DescriptionOfStyle(_In_ int style)
 
   return sValue;
 }
+
+CStringA CScintillaCtrl::GetDefaultFoldDisplayText()
+{
+  //Work out the length of string to allocate
+  const int nValueLength = GetDefaultFoldDisplayText(nullptr);
+
+  //Call the function which does the work
+  CStringA sValue;
+  GetDefaultFoldDisplayText(sValue.GetBufferSetLength(nValueLength));
+  sValue.ReleaseBuffer();
+
+  return sValue;
+}
+
+
 #endif //#ifdef _UNICODE
 
 
-//Everything else after this point was auto generated using the "ConvertScintillaiface.js" script
-
-void CScintillaCtrl::AddText(_In_ int length, _In_reads_bytes_(length) const char* text)
+#pragma warning(push)
+#pragma warning(disable : 26461 26472 26490)
+void CScintillaCtrl::AddText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text)
 {
   Call(SCI_ADDTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text));
 }
 
-void CScintillaCtrl::AddStyledText(_In_ int length, _In_reads_bytes_(length) char* c)
+void CScintillaCtrl::AddStyledText(_In_ Sci_Position length, _In_reads_bytes_(length) char* c)
 {
   Call(SCI_ADDSTYLEDTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(c));
 }
@@ -1235,7 +1310,7 @@ void CScintillaCtrl::InsertText(_In_ Sci_Position pos, _In_z_ const char* text)
   Call(SCI_INSERTTEXT, static_cast<WPARAM>(pos), reinterpret_cast<LPARAM>(text));
 }
 
-void CScintillaCtrl::ChangeInsertion(_In_ int length, _In_reads_bytes_(length) const char* text)
+void CScintillaCtrl::ChangeInsertion(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text)
 {
   Call(SCI_CHANGEINSERTION, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text));
 }
@@ -1245,7 +1320,7 @@ void CScintillaCtrl::ClearAll()
   Call(SCI_CLEARALL, 0, 0);
 }
 
-void CScintillaCtrl::DeleteRange(_In_ Sci_Position start, _In_ int lengthDelete)
+void CScintillaCtrl::DeleteRange(_In_ Sci_Position start, _In_ Sci_Position lengthDelete)
 {
   Call(SCI_DELETERANGE, static_cast<WPARAM>(start), static_cast<LPARAM>(lengthDelete));
 }
@@ -1255,9 +1330,9 @@ void CScintillaCtrl::ClearDocumentStyle()
   Call(SCI_CLEARDOCUMENTSTYLE, 0, 0);
 }
 
-int CScintillaCtrl::GetLength()
+Sci_Position CScintillaCtrl::GetLength()
 {
-  return static_cast<int>(Call(SCI_GETLENGTH, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETLENGTH, 0, 0));
 }
 
 int CScintillaCtrl::GetCharAt(_In_ Sci_Position pos)
@@ -1300,9 +1375,9 @@ void CScintillaCtrl::SetSavePoint()
   Call(SCI_SETSAVEPOINT, 0, 0);
 }
 
-int CScintillaCtrl::GetStyledText(_Inout_ Sci_TextRange* tr)
+Sci_Position CScintillaCtrl::GetStyledText(_Inout_ Sci_TextRange* tr)
 {
-  return static_cast<int>(Call(SCI_GETSTYLEDTEXT, 0, reinterpret_cast<LPARAM>(tr)));
+  return static_cast<Sci_Position>(Call(SCI_GETSTYLEDTEXT, 0, reinterpret_cast<LPARAM>(tr)));
 }
 
 BOOL CScintillaCtrl::CanRedo()
@@ -1318,6 +1393,16 @@ int CScintillaCtrl::MarkerLineFromHandle(_In_ int markerHandle)
 void CScintillaCtrl::MarkerDeleteHandle(_In_ int markerHandle)
 {
   Call(SCI_MARKERDELETEHANDLE, static_cast<WPARAM>(markerHandle), 0);
+}
+
+int CScintillaCtrl::MarkerHandleFromLine(_In_ int line, _In_ int which)
+{
+  return static_cast<int>(Call(SCI_MARKERHANDLEFROMLINE, static_cast<WPARAM>(line), static_cast<LPARAM>(which)));
+}
+
+int CScintillaCtrl::MarkerNumberFromLine(_In_ int line, _In_ int which)
+{
+  return static_cast<int>(Call(SCI_MARKERNUMBERFROMLINE, static_cast<WPARAM>(line), static_cast<LPARAM>(which)));
 }
 
 BOOL CScintillaCtrl::GetUndoCollection()
@@ -1370,9 +1455,9 @@ void CScintillaCtrl::SetAnchor(_In_ Sci_Position anchor)
   Call(SCI_SETANCHOR, static_cast<WPARAM>(anchor), 0);
 }
 
-int CScintillaCtrl::GetCurLine(_In_ int length, _Inout_opt_ char* text)
+Sci_Position CScintillaCtrl::GetCurLine(_In_ Sci_Position length, _Inout_opt_ char* text)
 {
-  return static_cast<int>(Call(SCI_GETCURLINE, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETCURLINE, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
 }
 
 Sci_Position CScintillaCtrl::GetEndStyled()
@@ -1400,7 +1485,7 @@ void CScintillaCtrl::StartStyling(_In_ Sci_Position start, _In_ int unused)
   Call(SCI_STARTSTYLING, static_cast<WPARAM>(start), static_cast<LPARAM>(unused));
 }
 
-void CScintillaCtrl::SetStyling(_In_ int length, _In_ int style)
+void CScintillaCtrl::SetStyling(_In_ Sci_Position length, _In_ int style)
 {
   Call(SCI_SETSTYLING, static_cast<WPARAM>(length), static_cast<LPARAM>(style));
 }
@@ -1423,6 +1508,16 @@ void CScintillaCtrl::SetTabWidth(_In_ int tabWidth)
 int CScintillaCtrl::GetTabWidth()
 {
   return static_cast<int>(Call(SCI_GETTABWIDTH, 0, 0));
+}
+
+void CScintillaCtrl::SetTabMinimumWidth(_In_ int pixels)
+{
+  Call(SCI_SETTABMINIMUMWIDTH, static_cast<WPARAM>(pixels), 0);
+}
+
+int CScintillaCtrl::GetTabMinimumWidth()
+{
+  return static_cast<int>(Call(SCI_GETTABMINIMUMWIDTH, 0, 0));
 }
 
 void CScintillaCtrl::ClearTabStops(_In_ int line)
@@ -1795,7 +1890,7 @@ void CScintillaCtrl::ClearAllCmdKeys()
   Call(SCI_CLEARALLCMDKEYS, 0, 0);
 }
 
-void CScintillaCtrl::SetStylingEx(_In_ int length, _In_ const char* styles)
+void CScintillaCtrl::SetStylingEx(_In_ Sci_Position length, _In_ const char* styles)
 {
   Call(SCI_SETSTYLINGEX, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(styles));
 }
@@ -1823,6 +1918,16 @@ void CScintillaCtrl::SetWordChars(_In_ const char* characters)
 int CScintillaCtrl::GetWordChars(_Inout_opt_ char* characters)
 {
   return static_cast<int>(Call(SCI_GETWORDCHARS, 0, reinterpret_cast<LPARAM>(characters)));
+}
+
+void CScintillaCtrl::SetCharacterCategoryOptimization(_In_ int countCharacters)
+{
+  Call(SCI_SETCHARACTERCATEGORYOPTIMIZATION, static_cast<WPARAM>(countCharacters), 0);
+}
+
+int CScintillaCtrl::GetCharacterCategoryOptimization()
+{
+  return static_cast<int>(Call(SCI_GETCHARACTERCATEGORYOPTIMIZATION, 0, 0));
 }
 
 void CScintillaCtrl::BeginUndoAction()
@@ -1915,16 +2020,6 @@ int CScintillaCtrl::GetWhitespaceSize()
   return static_cast<int>(Call(SCI_GETWHITESPACESIZE, 0, 0));
 }
 
-void CScintillaCtrl::SetStyleBits(_In_ int bits)
-{
-//  Call(SCI_SETSTYLEBITS, static_cast<WPARAM>(bits), 0);
-}
-
-int CScintillaCtrl::GetStyleBits()
-{
-//  return static_cast<int>(Call(SCI_GETSTYLEBITS, 0, 0));
-}
-
 void CScintillaCtrl::SetLineState(_In_ int line, _In_ int state)
 {
   Call(SCI_SETLINESTATE, static_cast<WPARAM>(line), static_cast<LPARAM>(state));
@@ -1975,7 +2070,7 @@ void CScintillaCtrl::StyleSetChangeable(_In_ int style, _In_ BOOL changeable)
   Call(SCI_STYLESETCHANGEABLE, static_cast<WPARAM>(style), static_cast<LPARAM>(changeable));
 }
 
-void CScintillaCtrl::AutoCShow(_In_ int lengthEntered, _In_z_ const char* itemList)
+void CScintillaCtrl::AutoCShow(_In_ Sci_Position lengthEntered, _In_z_ const char* itemList)
 {
   Call(SCI_AUTOCSHOW, static_cast<WPARAM>(lengthEntered), reinterpret_cast<LPARAM>(itemList));
 }
@@ -2155,14 +2250,19 @@ Sci_Position CScintillaCtrl::GetLineIndentPosition(_In_ int line)
   return static_cast<Sci_Position>(Call(SCI_GETLINEINDENTPOSITION, static_cast<WPARAM>(line), 0));
 }
 
-int CScintillaCtrl::GetColumn(_In_ Sci_Position pos)
+Sci_Position CScintillaCtrl::GetColumn(_In_ Sci_Position pos)
 {
-  return static_cast<int>(Call(SCI_GETCOLUMN, static_cast<WPARAM>(pos), 0));
+  return static_cast<Sci_Position>(Call(SCI_GETCOLUMN, static_cast<WPARAM>(pos), 0));
 }
 
-int CScintillaCtrl::CountCharacters(_In_ Sci_Position start, _In_ Sci_Position end)
+Sci_Position CScintillaCtrl::CountCharacters(_In_ Sci_Position start, _In_ Sci_Position end)
 {
-  return static_cast<int>(Call(SCI_COUNTCHARACTERS, static_cast<WPARAM>(start), static_cast<LPARAM>(end)));
+  return static_cast<Sci_Position>(Call(SCI_COUNTCHARACTERS, static_cast<WPARAM>(start), static_cast<LPARAM>(end)));
+}
+
+Sci_Position CScintillaCtrl::CountCodeUnits(_In_ Sci_Position start, _In_ Sci_Position end)
+{
+  return static_cast<Sci_Position>(Call(SCI_COUNTCODEUNITS, static_cast<WPARAM>(start), static_cast<LPARAM>(end)));
 }
 
 void CScintillaCtrl::SetHScrollBar(_In_ BOOL visible)
@@ -2185,14 +2285,14 @@ int CScintillaCtrl::GetIndentationGuides()
   return static_cast<int>(Call(SCI_GETINDENTATIONGUIDES, 0, 0));
 }
 
-void CScintillaCtrl::SetHighlightGuide(_In_ int column)
+void CScintillaCtrl::SetHighlightGuide(_In_ Sci_Position column)
 {
   Call(SCI_SETHIGHLIGHTGUIDE, static_cast<WPARAM>(column), 0);
 }
 
-int CScintillaCtrl::GetHighlightGuide()
+Sci_Position CScintillaCtrl::GetHighlightGuide()
 {
-  return static_cast<int>(Call(SCI_GETHIGHLIGHTGUIDE, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETHIGHLIGHTGUIDE, 0, 0));
 }
 
 Sci_Position CScintillaCtrl::GetLineEndPosition(_In_ int line)
@@ -2280,9 +2380,9 @@ int CScintillaCtrl::GetFirstVisibleLine()
   return static_cast<int>(Call(SCI_GETFIRSTVISIBLELINE, 0, 0));
 }
 
-int CScintillaCtrl::GetLine(_In_ int line, _Inout_ char* text)
+Sci_Position CScintillaCtrl::GetLine(_In_ int line, _Inout_ char* text)
 {
-  return static_cast<int>(Call(SCI_GETLINE, static_cast<WPARAM>(line), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETLINE, static_cast<WPARAM>(line), reinterpret_cast<LPARAM>(text)));
 }
 
 int CScintillaCtrl::GetLineCount()
@@ -2320,14 +2420,14 @@ void CScintillaCtrl::SetSel(_In_ Sci_Position anchor, _In_ Sci_Position caret)
   Call(SCI_SETSEL, static_cast<WPARAM>(anchor), static_cast<LPARAM>(caret));
 }
 
-int CScintillaCtrl::GetSelText(_Inout_opt_ char* text)
+Sci_Position CScintillaCtrl::GetSelText(_Inout_opt_ char* text)
 {
-  return static_cast<int>(Call(SCI_GETSELTEXT, 0, reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETSELTEXT, 0, reinterpret_cast<LPARAM>(text)));
 }
 
-int CScintillaCtrl::GetTextRange(_Inout_ Sci_TextRange* tr)
+Sci_Position CScintillaCtrl::GetTextRange(_Inout_ Sci_TextRange* tr)
 {
-  return static_cast<int>(Call(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(tr)));
+  return static_cast<Sci_Position>(Call(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(tr)));
 }
 
 void CScintillaCtrl::HideSelection(_In_ BOOL hide)
@@ -2355,7 +2455,7 @@ Sci_Position CScintillaCtrl::PositionFromLine(_In_ int line)
   return static_cast<Sci_Position>(Call(SCI_POSITIONFROMLINE, static_cast<WPARAM>(line), 0));
 }
 
-void CScintillaCtrl::LineScroll(_In_ int columns, _In_ int lines)
+void CScintillaCtrl::LineScroll(_In_ Sci_Position columns, _In_ int lines)
 {
   Call(SCI_LINESCROLL, static_cast<WPARAM>(columns), static_cast<LPARAM>(lines));
 }
@@ -2430,14 +2530,14 @@ void CScintillaCtrl::SetText(_In_z_ const char* text)
   Call(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>(text));
 }
 
-int CScintillaCtrl::GetText(_In_ int length, _Inout_updates_opt_(length) char* text)
+Sci_Position CScintillaCtrl::GetText(_In_ Sci_Position length, _Inout_updates_opt_(length) char* text)
 {
-  return static_cast<int>(Call(SCI_GETTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
 }
 
-int CScintillaCtrl::GetTextLength()
+Sci_Position CScintillaCtrl::GetTextLength()
 {
-  return static_cast<int>(Call(SCI_GETTEXTLENGTH, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETTEXTLENGTH, 0, 0));
 }
 
 void CScintillaCtrl::SetOvertype(_In_ BOOL overType)
@@ -2470,6 +2570,16 @@ Sci_Position CScintillaCtrl::GetTargetStart()
   return static_cast<Sci_Position>(Call(SCI_GETTARGETSTART, 0, 0));
 }
 
+void CScintillaCtrl::SetTargetStartVirtualSpace(_In_ Sci_Position space)
+{
+  Call(SCI_SETTARGETSTARTVIRTUALSPACE, static_cast<WPARAM>(space), 0);
+}
+
+Sci_Position CScintillaCtrl::GetTargetStartVirtualSpace()
+{
+  return static_cast<Sci_Position>(Call(SCI_GETTARGETSTARTVIRTUALSPACE, 0, 0));
+}
+
 void CScintillaCtrl::SetTargetEnd(_In_ Sci_Position end)
 {
   Call(SCI_SETTARGETEND, static_cast<WPARAM>(end), 0);
@@ -2480,9 +2590,9 @@ void CScintillaCtrl::SetTargetRange(_In_ Sci_Position start, _In_ Sci_Position e
   Call(SCI_SETTARGETRANGE, static_cast<WPARAM>(start), static_cast<LPARAM>(end));
 }
 
-int CScintillaCtrl::GetTargetText(_Inout_opt_ char* text)
+Sci_Position CScintillaCtrl::GetTargetText(_Inout_opt_ char* text)
 {
-  return static_cast<int>(Call(SCI_GETTARGETTEXT, 0, reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETTARGETTEXT, 0, reinterpret_cast<LPARAM>(text)));
 }
 
 void CScintillaCtrl::TargetFromSelection()
@@ -2500,19 +2610,29 @@ Sci_Position CScintillaCtrl::GetTargetEnd()
   return static_cast<Sci_Position>(Call(SCI_GETTARGETEND, 0, 0));
 }
 
-int CScintillaCtrl::ReplaceTarget(_In_ int length, _In_ const char* text)
+void CScintillaCtrl::SetTargetEndVirtualSpace(_In_ Sci_Position space)
 {
-  return static_cast<int>(Call(SCI_REPLACETARGET, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+  Call(SCI_SETTARGETENDVIRTUALSPACE, static_cast<WPARAM>(space), 0);
 }
 
-int CScintillaCtrl::ReplaceTargetRE(_In_ int length, _In_ const char* text)
+Sci_Position CScintillaCtrl::GetTargetEndVirtualSpace()
 {
-  return static_cast<int>(Call(SCI_REPLACETARGETRE, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_GETTARGETENDVIRTUALSPACE, 0, 0));
 }
 
-int CScintillaCtrl::SearchInTarget(_In_ int length, _In_reads_bytes_(length) const char* text)
+Sci_Position CScintillaCtrl::ReplaceTarget(_In_ Sci_Position length, _In_ const char* text)
 {
-  return static_cast<int>(Call(SCI_SEARCHINTARGET, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_REPLACETARGET, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+}
+
+Sci_Position CScintillaCtrl::ReplaceTargetRE(_In_ Sci_Position length, _In_ const char* text)
+{
+  return static_cast<Sci_Position>(Call(SCI_REPLACETARGETRE, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
+}
+
+Sci_Position CScintillaCtrl::SearchInTarget(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text)
+{
+  return static_cast<Sci_Position>(Call(SCI_SEARCHINTARGET, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text)));
 }
 
 void CScintillaCtrl::SetSearchFlags(_In_ int searchFlags)
@@ -2545,12 +2665,12 @@ Sci_Position CScintillaCtrl::CallTipPosStart()
   return static_cast<Sci_Position>(Call(SCI_CALLTIPPOSSTART, 0, 0));
 }
 
-void CScintillaCtrl::CallTipSetPosStart(_In_ int posStart)
+void CScintillaCtrl::CallTipSetPosStart(_In_ Sci_Position posStart)
 {
   Call(SCI_CALLTIPSETPOSSTART, static_cast<WPARAM>(posStart), 0);
 }
 
-void CScintillaCtrl::CallTipSetHlt(_In_ int highlightStart, _In_ int highlightEnd)
+void CScintillaCtrl::CallTipSetHlt(_In_ Sci_Position highlightStart, _In_ Sci_Position highlightEnd)
 {
   Call(SCI_CALLTIPSETHLT, static_cast<WPARAM>(highlightStart), static_cast<LPARAM>(highlightEnd));
 }
@@ -2660,6 +2780,21 @@ void CScintillaCtrl::FoldDisplayTextSetStyle(_In_ int style)
   Call(SCI_FOLDDISPLAYTEXTSETSTYLE, static_cast<WPARAM>(style), 0);
 }
 
+int CScintillaCtrl::FoldDisplayTextGetStyle()
+{
+  return static_cast<int>(Call(SCI_FOLDDISPLAYTEXTGETSTYLE, 0, 0));
+}
+
+void CScintillaCtrl::SetDefaultFoldDisplayText(_In_z_ const char* text)
+{
+  Call(SCI_SETDEFAULTFOLDDISPLAYTEXT, 0, reinterpret_cast<LPARAM>(text));
+}
+
+int CScintillaCtrl::GetDefaultFoldDisplayText(_Inout_opt_ char* text)
+{
+  return static_cast<int>(Call(SCI_GETDEFAULTFOLDDISPLAYTEXT, 0, reinterpret_cast<LPARAM>(text)));
+}
+
 void CScintillaCtrl::FoldLine(_In_ int line, _In_ int action)
 {
   Call(SCI_FOLDLINE, static_cast<WPARAM>(line), static_cast<LPARAM>(action));
@@ -2735,14 +2870,14 @@ int CScintillaCtrl::GetMouseDwellTime()
   return static_cast<int>(Call(SCI_GETMOUSEDWELLTIME, 0, 0));
 }
 
-int CScintillaCtrl::WordStartPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters)
+Sci_Position CScintillaCtrl::WordStartPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters)
 {
-  return static_cast<int>(Call(SCI_WORDSTARTPOSITION, static_cast<WPARAM>(pos), static_cast<LPARAM>(onlyWordCharacters)));
+  return static_cast<Sci_Position>(Call(SCI_WORDSTARTPOSITION, static_cast<WPARAM>(pos), static_cast<LPARAM>(onlyWordCharacters)));
 }
 
-int CScintillaCtrl::WordEndPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters)
+Sci_Position CScintillaCtrl::WordEndPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters)
 {
-  return static_cast<int>(Call(SCI_WORDENDPOSITION, static_cast<WPARAM>(pos), static_cast<LPARAM>(onlyWordCharacters)));
+  return static_cast<Sci_Position>(Call(SCI_WORDENDPOSITION, static_cast<WPARAM>(pos), static_cast<LPARAM>(onlyWordCharacters)));
 }
 
 BOOL CScintillaCtrl::IsRangeWord(_In_ Sci_Position start, _In_ Sci_Position end)
@@ -2870,7 +3005,7 @@ BOOL CScintillaCtrl::GetVScrollBar()
   return static_cast<BOOL>(Call(SCI_GETVSCROLLBAR, 0, 0));
 }
 
-void CScintillaCtrl::AppendText(_In_ int length, _In_reads_bytes_(length) const char* text)
+void CScintillaCtrl::AppendText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text)
 {
   Call(SCI_APPENDTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text));
 }
@@ -3245,9 +3380,9 @@ void CScintillaCtrl::MoveCaretInsideView()
   Call(SCI_MOVECARETINSIDEVIEW, 0, 0);
 }
 
-int CScintillaCtrl::LineLength(_In_ int line)
+Sci_Position CScintillaCtrl::LineLength(_In_ int line)
 {
-  return static_cast<int>(Call(SCI_LINELENGTH, static_cast<WPARAM>(line), 0));
+  return static_cast<Sci_Position>(Call(SCI_LINELENGTH, static_cast<WPARAM>(line), 0));
 }
 
 void CScintillaCtrl::BraceHighlight(_In_ Sci_Position posA, _In_ Sci_Position posB)
@@ -3287,6 +3422,7 @@ void CScintillaCtrl::SetViewEOL(_In_ BOOL visible)
 
 void* CScintillaCtrl::GetDocPointer()
 {
+#pragma warning(suppress: 26487)
   return reinterpret_cast<void*>(Call(SCI_GETDOCPOINTER, 0, 0));
 }
 
@@ -3300,12 +3436,12 @@ void CScintillaCtrl::SetModEventMask(_In_ int eventMask)
   Call(SCI_SETMODEVENTMASK, static_cast<WPARAM>(eventMask), 0);
 }
 
-int CScintillaCtrl::GetEdgeColumn()
+Sci_Position CScintillaCtrl::GetEdgeColumn()
 {
-  return static_cast<int>(Call(SCI_GETEDGECOLUMN, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETEDGECOLUMN, 0, 0));
 }
 
-void CScintillaCtrl::SetEdgeColumn(_In_ int column)
+void CScintillaCtrl::SetEdgeColumn(_In_ Sci_Position column)
 {
   Call(SCI_SETEDGECOLUMN, static_cast<WPARAM>(column), 0);
 }
@@ -3330,7 +3466,7 @@ void CScintillaCtrl::SetEdgeColour(_In_ COLORREF edgeColour)
   Call(SCI_SETEDGECOLOUR, static_cast<WPARAM>(edgeColour), 0);
 }
 
-void CScintillaCtrl::MultiEdgeAddLine(_In_ int column, _In_ COLORREF edgeColour)
+void CScintillaCtrl::MultiEdgeAddLine(_In_ Sci_Position column, _In_ COLORREF edgeColour)
 {
   Call(SCI_MULTIEDGEADDLINE, static_cast<WPARAM>(column), static_cast<LPARAM>(edgeColour));
 }
@@ -3345,14 +3481,14 @@ void CScintillaCtrl::SearchAnchor()
   Call(SCI_SEARCHANCHOR, 0, 0);
 }
 
-int CScintillaCtrl::SearchNext(_In_ int searchFlags, _In_z_ const char* text)
+Sci_Position CScintillaCtrl::SearchNext(_In_ int searchFlags, _In_z_ const char* text)
 {
-  return static_cast<int>(Call(SCI_SEARCHNEXT, static_cast<WPARAM>(searchFlags), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_SEARCHNEXT, static_cast<WPARAM>(searchFlags), reinterpret_cast<LPARAM>(text)));
 }
 
-int CScintillaCtrl::SearchPrev(_In_ int searchFlags, _In_z_ const char* text)
+Sci_Position CScintillaCtrl::SearchPrev(_In_ int searchFlags, _In_z_ const char* text)
 {
-  return static_cast<int>(Call(SCI_SEARCHPREV, static_cast<WPARAM>(searchFlags), reinterpret_cast<LPARAM>(text)));
+  return static_cast<Sci_Position>(Call(SCI_SEARCHPREV, static_cast<WPARAM>(searchFlags), reinterpret_cast<LPARAM>(text)));
 }
 
 int CScintillaCtrl::LinesOnScreen()
@@ -3380,24 +3516,40 @@ int CScintillaCtrl::GetZoom()
   return static_cast<int>(Call(SCI_GETZOOM, 0, 0));
 }
 
-int CScintillaCtrl::CreateDocument()
+void* CScintillaCtrl::CreateDocument(_In_ Sci_Position bytes, _In_ int documentOptions)
 {
-  return static_cast<int>(Call(SCI_CREATEDOCUMENT, 0, 0));
+#pragma warning(suppress: 26487)
+  return reinterpret_cast<void*>(Call(SCI_CREATEDOCUMENT, static_cast<WPARAM>(bytes), static_cast<LPARAM>(documentOptions)));
 }
 
-void CScintillaCtrl::AddRefDocument(_In_ int doc)
+void CScintillaCtrl::AddRefDocument(_In_ void* doc)
 {
-  Call(SCI_ADDREFDOCUMENT, 0, static_cast<LPARAM>(doc));
+  Call(SCI_ADDREFDOCUMENT, 0, reinterpret_cast<LPARAM>(doc));
 }
 
-void CScintillaCtrl::ReleaseDocument(_In_ int doc)
+void CScintillaCtrl::ReleaseDocument(_In_ void* doc)
 {
-  Call(SCI_RELEASEDOCUMENT, 0, static_cast<LPARAM>(doc));
+  Call(SCI_RELEASEDOCUMENT, 0, reinterpret_cast<LPARAM>(doc));
+}
+
+int CScintillaCtrl::GetDocumentOptions()
+{
+  return static_cast<int>(Call(SCI_GETDOCUMENTOPTIONS, 0, 0));
 }
 
 int CScintillaCtrl::GetModEventMask()
 {
   return static_cast<int>(Call(SCI_GETMODEVENTMASK, 0, 0));
+}
+
+void CScintillaCtrl::SetCommandEvents(_In_ BOOL commandEvents)
+{
+  Call(SCI_SETCOMMANDEVENTS, static_cast<WPARAM>(commandEvents), 0);
+}
+
+BOOL CScintillaCtrl::GetCommandEvents()
+{
+  return static_cast<BOOL>(Call(SCI_GETCOMMANDEVENTS, 0, 0));
 }
 
 void CScintillaCtrl::SCISetFocus(_In_ BOOL focus)
@@ -3605,9 +3757,14 @@ Sci_Position CScintillaCtrl::PositionAfter(_In_ Sci_Position pos)
   return static_cast<Sci_Position>(Call(SCI_POSITIONAFTER, static_cast<WPARAM>(pos), 0));
 }
 
-Sci_Position CScintillaCtrl::PositionRelative(_In_ Sci_Position pos, _In_ int relative)
+Sci_Position CScintillaCtrl::PositionRelative(_In_ Sci_Position pos, _In_ Sci_Position relative)
 {
   return static_cast<Sci_Position>(Call(SCI_POSITIONRELATIVE, static_cast<WPARAM>(pos), static_cast<LPARAM>(relative)));
+}
+
+Sci_Position CScintillaCtrl::PositionRelativeCodeUnits(_In_ Sci_Position pos, _In_ Sci_Position relative)
+{
+  return static_cast<Sci_Position>(Call(SCI_POSITIONRELATIVECODEUNITS, static_cast<WPARAM>(pos), static_cast<LPARAM>(relative)));
 }
 
 void CScintillaCtrl::CopyRange(_In_ Sci_Position start, _In_ Sci_Position end)
@@ -3615,7 +3772,7 @@ void CScintillaCtrl::CopyRange(_In_ Sci_Position start, _In_ Sci_Position end)
   Call(SCI_COPYRANGE, static_cast<WPARAM>(start), static_cast<LPARAM>(end));
 }
 
-void CScintillaCtrl::CopyText(_In_ int length, _In_reads_bytes_(length) const char* text)
+void CScintillaCtrl::CopyText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text)
 {
   Call(SCI_COPYTEXT, static_cast<WPARAM>(length), reinterpret_cast<LPARAM>(text));
 }
@@ -3628,6 +3785,11 @@ void CScintillaCtrl::SetSelectionMode(_In_ int selectionMode)
 int CScintillaCtrl::GetSelectionMode()
 {
   return static_cast<int>(Call(SCI_GETSELECTIONMODE, 0, 0));
+}
+
+BOOL CScintillaCtrl::GetMoveExtendsSelection()
+{
+  return static_cast<BOOL>(Call(SCI_GETMOVEEXTENDSSELECTION, 0, 0));
 }
 
 Sci_Position CScintillaCtrl::GetLineSelStartPosition(_In_ int line)
@@ -3790,29 +3952,29 @@ int CScintillaCtrl::AutoCGetOrder()
   return static_cast<int>(Call(SCI_AUTOCGETORDER, 0, 0));
 }
 
-void CScintillaCtrl::Allocate(_In_ int bytes)
+void CScintillaCtrl::Allocate(_In_ Sci_Position bytes)
 {
   Call(SCI_ALLOCATE, static_cast<WPARAM>(bytes), 0);
 }
 
-int CScintillaCtrl::TargetAsUTF8(_Inout_ char* s)
+Sci_Position CScintillaCtrl::TargetAsUTF8(_Inout_ char* s)
 {
-  return static_cast<int>(Call(SCI_TARGETASUTF8, 0, reinterpret_cast<LPARAM>(s)));
+  return static_cast<Sci_Position>(Call(SCI_TARGETASUTF8, 0, reinterpret_cast<LPARAM>(s)));
 }
 
-void CScintillaCtrl::SetLengthForEncode(_In_ int bytes)
+void CScintillaCtrl::SetLengthForEncode(_In_ Sci_Position bytes)
 {
   Call(SCI_SETLENGTHFORENCODE, static_cast<WPARAM>(bytes), 0);
 }
 
-int CScintillaCtrl::EncodedFromUTF8(_In_ const char* utf8, _Inout_ char* encoded)
+Sci_Position CScintillaCtrl::EncodedFromUTF8(_In_ const char* utf8, _Inout_ char* encoded)
 {
-  return static_cast<int>(Call(SCI_ENCODEDFROMUTF8, reinterpret_cast<WPARAM>(utf8), reinterpret_cast<LPARAM>(encoded)));
+  return static_cast<Sci_Position>(Call(SCI_ENCODEDFROMUTF8, reinterpret_cast<WPARAM>(utf8), reinterpret_cast<LPARAM>(encoded)));
 }
 
-int CScintillaCtrl::FindColumn(_In_ int line, _In_ int column)
+Sci_Position CScintillaCtrl::FindColumn(_In_ int line, _In_ Sci_Position column)
 {
-  return static_cast<int>(Call(SCI_FINDCOLUMN, static_cast<WPARAM>(line), static_cast<LPARAM>(column)));
+  return static_cast<Sci_Position>(Call(SCI_FINDCOLUMN, static_cast<WPARAM>(line), static_cast<LPARAM>(column)));
 }
 
 int CScintillaCtrl::GetCaretSticky()
@@ -3885,12 +4047,12 @@ int CScintillaCtrl::GetIndicatorValue()
   return static_cast<int>(Call(SCI_GETINDICATORVALUE, 0, 0));
 }
 
-void CScintillaCtrl::IndicatorFillRange(_In_ Sci_Position start, _In_ int lengthFill)
+void CScintillaCtrl::IndicatorFillRange(_In_ Sci_Position start, _In_ Sci_Position lengthFill)
 {
   Call(SCI_INDICATORFILLRANGE, static_cast<WPARAM>(start), static_cast<LPARAM>(lengthFill));
 }
 
-void CScintillaCtrl::IndicatorClearRange(_In_ Sci_Position start, _In_ int lengthClear)
+void CScintillaCtrl::IndicatorClearRange(_In_ Sci_Position start, _In_ Sci_Position lengthClear)
 {
   Call(SCI_INDICATORCLEARRANGE, static_cast<WPARAM>(start), static_cast<LPARAM>(lengthClear));
 }
@@ -3905,14 +4067,14 @@ int CScintillaCtrl::IndicatorValueAt(_In_ int indicator, _In_ Sci_Position pos)
   return static_cast<int>(Call(SCI_INDICATORVALUEAT, static_cast<WPARAM>(indicator), static_cast<LPARAM>(pos)));
 }
 
-int CScintillaCtrl::IndicatorStart(_In_ int indicator, _In_ Sci_Position pos)
+Sci_Position CScintillaCtrl::IndicatorStart(_In_ int indicator, _In_ Sci_Position pos)
 {
-  return static_cast<int>(Call(SCI_INDICATORSTART, static_cast<WPARAM>(indicator), static_cast<LPARAM>(pos)));
+  return static_cast<Sci_Position>(Call(SCI_INDICATORSTART, static_cast<WPARAM>(indicator), static_cast<LPARAM>(pos)));
 }
 
-int CScintillaCtrl::IndicatorEnd(_In_ int indicator, _In_ Sci_Position pos)
+Sci_Position CScintillaCtrl::IndicatorEnd(_In_ int indicator, _In_ Sci_Position pos)
 {
-  return static_cast<int>(Call(SCI_INDICATOREND, static_cast<WPARAM>(indicator), static_cast<LPARAM>(pos)));
+  return static_cast<Sci_Position>(Call(SCI_INDICATOREND, static_cast<WPARAM>(indicator), static_cast<LPARAM>(pos)));
 }
 
 void CScintillaCtrl::SetPositionCache(_In_ int size)
@@ -3932,11 +4094,13 @@ void CScintillaCtrl::CopyAllowLine()
 
 const char* CScintillaCtrl::GetCharacterPointer()
 {
+#pragma warning(suppress: 26487)
   return reinterpret_cast<const char*>(Call(SCI_GETCHARACTERPOINTER, 0, 0));
 }
 
-void* CScintillaCtrl::GetRangePointer(_In_ Sci_Position start, _In_ int lengthRange)
+void* CScintillaCtrl::GetRangePointer(_In_ Sci_Position start, _In_ Sci_Position lengthRange)
 {
+#pragma warning(suppress: 26487)
   return reinterpret_cast<void*>(Call(SCI_GETRANGEPOINTER, static_cast<WPARAM>(start), static_cast<LPARAM>(lengthRange)));
 }
 
@@ -4240,24 +4404,24 @@ Sci_Position CScintillaCtrl::GetSelectionNAnchor(_In_ int selection)
   return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNANCHOR, static_cast<WPARAM>(selection), 0));
 }
 
-void CScintillaCtrl::SetSelectionNCaretVirtualSpace(_In_ int selection, _In_ int space)
+void CScintillaCtrl::SetSelectionNCaretVirtualSpace(_In_ int selection, _In_ Sci_Position space)
 {
   Call(SCI_SETSELECTIONNCARETVIRTUALSPACE, static_cast<WPARAM>(selection), static_cast<LPARAM>(space));
 }
 
-int CScintillaCtrl::GetSelectionNCaretVirtualSpace(_In_ int selection)
+Sci_Position CScintillaCtrl::GetSelectionNCaretVirtualSpace(_In_ int selection)
 {
-  return static_cast<int>(Call(SCI_GETSELECTIONNCARETVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
+  return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNCARETVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
 }
 
-void CScintillaCtrl::SetSelectionNAnchorVirtualSpace(_In_ int selection, _In_ int space)
+void CScintillaCtrl::SetSelectionNAnchorVirtualSpace(_In_ int selection, _In_ Sci_Position space)
 {
   Call(SCI_SETSELECTIONNANCHORVIRTUALSPACE, static_cast<WPARAM>(selection), static_cast<LPARAM>(space));
 }
 
-int CScintillaCtrl::GetSelectionNAnchorVirtualSpace(_In_ int selection)
+Sci_Position CScintillaCtrl::GetSelectionNAnchorVirtualSpace(_In_ int selection)
 {
-  return static_cast<int>(Call(SCI_GETSELECTIONNANCHORVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
+  return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNANCHORVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
 }
 
 void CScintillaCtrl::SetSelectionNStart(_In_ int selection, _In_ Sci_Position anchor)
@@ -4270,9 +4434,19 @@ Sci_Position CScintillaCtrl::GetSelectionNStart(_In_ int selection)
   return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNSTART, static_cast<WPARAM>(selection), 0));
 }
 
+Sci_Position CScintillaCtrl::GetSelectionNStartVirtualSpace(_In_ int selection)
+{
+  return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNSTARTVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
+}
+
 void CScintillaCtrl::SetSelectionNEnd(_In_ int selection, _In_ Sci_Position caret)
 {
   Call(SCI_SETSELECTIONNEND, static_cast<WPARAM>(selection), static_cast<LPARAM>(caret));
+}
+
+Sci_Position CScintillaCtrl::GetSelectionNEndVirtualSpace(_In_ int selection)
+{
+  return static_cast<Sci_Position>(Call(SCI_GETSELECTIONNENDVIRTUALSPACE, static_cast<WPARAM>(selection), 0));
 }
 
 Sci_Position CScintillaCtrl::GetSelectionNEnd(_In_ int selection)
@@ -4300,24 +4474,24 @@ Sci_Position CScintillaCtrl::GetRectangularSelectionAnchor()
   return static_cast<Sci_Position>(Call(SCI_GETRECTANGULARSELECTIONANCHOR, 0, 0));
 }
 
-void CScintillaCtrl::SetRectangularSelectionCaretVirtualSpace(_In_ int space)
+void CScintillaCtrl::SetRectangularSelectionCaretVirtualSpace(_In_ Sci_Position space)
 {
   Call(SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, static_cast<WPARAM>(space), 0);
 }
 
-int CScintillaCtrl::GetRectangularSelectionCaretVirtualSpace()
+Sci_Position CScintillaCtrl::GetRectangularSelectionCaretVirtualSpace()
 {
-  return static_cast<int>(Call(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 0, 0));
 }
 
-void CScintillaCtrl::SetRectangularSelectionAnchorVirtualSpace(_In_ int space)
+void CScintillaCtrl::SetRectangularSelectionAnchorVirtualSpace(_In_ Sci_Position space)
 {
   Call(SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, static_cast<WPARAM>(space), 0);
 }
 
-int CScintillaCtrl::GetRectangularSelectionAnchorVirtualSpace()
+Sci_Position CScintillaCtrl::GetRectangularSelectionAnchorVirtualSpace()
 {
-  return static_cast<int>(Call(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 0, 0));
+  return static_cast<Sci_Position>(Call(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 0, 0));
 }
 
 void CScintillaCtrl::SetVirtualSpaceOptions(_In_ int virtualSpaceOptions)
@@ -4470,9 +4644,10 @@ int CScintillaCtrl::GetTechnology()
   return static_cast<int>(Call(SCI_GETTECHNOLOGY, 0, 0));
 }
 
-int CScintillaCtrl::CreateLoader(_In_ int bytes)
+void* CScintillaCtrl::CreateLoader(_In_ Sci_Position bytes, _In_ int documentOptions)
 {
-  return static_cast<int>(Call(SCI_CREATELOADER, static_cast<WPARAM>(bytes), 0));
+#pragma warning(suppress: 26487)
+  return reinterpret_cast<void*>(Call(SCI_CREATELOADER, static_cast<WPARAM>(bytes), static_cast<LPARAM>(documentOptions)));
 }
 
 void CScintillaCtrl::FindIndicatorShow(_In_ Sci_Position start, _In_ Sci_Position end)
@@ -4565,7 +4740,7 @@ void CScintillaCtrl::Colourise(_In_ Sci_Position start, _In_ Sci_Position end)
   Call(SCI_COLOURISE, static_cast<WPARAM>(start), static_cast<LPARAM>(end));
 }
 
-void CScintillaCtrl::SetProperty(_In_z_ const char* key, _In_z_ const char* value)
+void CScintillaCtrl::SetScintillaProperty(_In_z_ const char* key, _In_z_ const char* value)
 {
   Call(SCI_SETPROPERTY, reinterpret_cast<WPARAM>(key), reinterpret_cast<LPARAM>(value));
 }
@@ -4585,7 +4760,7 @@ void CScintillaCtrl::LoadLexerLibrary(_In_z_ const char* path)
   Call(SCI_LOADLEXERLIBRARY, 0, reinterpret_cast<LPARAM>(path));
 }
 
-int CScintillaCtrl::GetProperty(_In_z_ const char* key, _Inout_opt_ char* value)
+int CScintillaCtrl::GetScintillaProperty(_In_z_ const char* key, _Inout_opt_ char* value)
 {
   return static_cast<int>(Call(SCI_GETPROPERTY, reinterpret_cast<WPARAM>(key), reinterpret_cast<LPARAM>(value)));
 }
@@ -4600,11 +4775,6 @@ int CScintillaCtrl::GetPropertyInt(_In_z_ const char* key, _In_ int defaultValue
   return static_cast<int>(Call(SCI_GETPROPERTYINT, reinterpret_cast<WPARAM>(key), defaultValue));
 }
 
-int CScintillaCtrl::GetStyleBitsNeeded()
-{
-//  return static_cast<int>(Call(SCI_GETSTYLEBITSNEEDED, 0, 0));
-}
-
 int CScintillaCtrl::GetLexerLanguage(_Inout_opt_ char* language)
 {
   return static_cast<int>(Call(SCI_GETLEXERLANGUAGE, 0, reinterpret_cast<LPARAM>(language)));
@@ -4612,6 +4782,7 @@ int CScintillaCtrl::GetLexerLanguage(_Inout_opt_ char* language)
 
 void* CScintillaCtrl::PrivateLexerCall(_In_ int operation, _In_opt_ void* pointer)
 {
+#pragma warning(suppress: 26487)
   return reinterpret_cast<void*>(Call(SCI_PRIVATELEXERCALL, static_cast<WPARAM>(operation), reinterpret_cast<LPARAM>(pointer)));
 }
 
@@ -4690,17 +4861,58 @@ int CScintillaCtrl::GetNamedStyles()
   return static_cast<int>(Call(SCI_GETNAMEDSTYLES, 0, 0));
 }
 
-int CScintillaCtrl::NameOfStyle(_In_ int style, _Inout_opt_ char* names)
+int CScintillaCtrl::NameOfStyle(_In_ int style, _Inout_opt_ char* name)
 {
-  return static_cast<int>(Call(SCI_NAMEOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(names)));
+  return static_cast<int>(Call(SCI_NAMEOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(name)));
 }
 
-int CScintillaCtrl::TagsOfStyle(_In_ int style, _Inout_opt_ char* names)
+int CScintillaCtrl::TagsOfStyle(_In_ int style, _Inout_opt_ char* tags)
 {
-  return static_cast<int>(Call(SCI_TAGSOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(names)));
+  return static_cast<int>(Call(SCI_TAGSOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(tags)));
 }
 
-int CScintillaCtrl::DescriptionOfStyle(_In_ int style, _Inout_opt_ char* names)
+int CScintillaCtrl::DescriptionOfStyle(_In_ int style, _Inout_opt_ char* description)
 {
-  return static_cast<int>(Call(SCI_DESCRIPTIONOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(names)));
+  return static_cast<int>(Call(SCI_DESCRIPTIONOFSTYLE, static_cast<WPARAM>(style), reinterpret_cast<LPARAM>(description)));
 }
+
+void CScintillaCtrl::SetILexer(_In_ void* ilexer)
+{
+  Call(SCI_SETILEXER, 0, reinterpret_cast<LPARAM>(ilexer));
+}
+
+int CScintillaCtrl::GetBidirectional()
+{
+  return static_cast<int>(Call(SCI_GETBIDIRECTIONAL, 0, 0));
+}
+
+void CScintillaCtrl::SetBidirectional(_In_ int bidirectional)
+{
+  Call(SCI_SETBIDIRECTIONAL, static_cast<WPARAM>(bidirectional), 0);
+}
+
+int CScintillaCtrl::GetLineCharacterIndex()
+{
+  return static_cast<int>(Call(SCI_GETLINECHARACTERINDEX, 0, 0));
+}
+
+void CScintillaCtrl::AllocateLineCharacterIndex(_In_ int lineCharacterIndex)
+{
+  Call(SCI_ALLOCATELINECHARACTERINDEX, static_cast<WPARAM>(lineCharacterIndex), 0);
+}
+
+void CScintillaCtrl::ReleaseLineCharacterIndex(_In_ int lineCharacterIndex)
+{
+  Call(SCI_RELEASELINECHARACTERINDEX, static_cast<WPARAM>(lineCharacterIndex), 0);
+}
+
+int CScintillaCtrl::LineFromIndexPosition(_In_ Sci_Position pos, _In_ int lineCharacterIndex)
+{
+  return static_cast<int>(Call(SCI_LINEFROMINDEXPOSITION, static_cast<WPARAM>(pos), static_cast<LPARAM>(lineCharacterIndex)));
+}
+
+Sci_Position CScintillaCtrl::IndexPositionFromLine(_In_ int line, _In_ int lineCharacterIndex)
+{
+  return static_cast<Sci_Position>(Call(SCI_INDEXPOSITIONFROMLINE, static_cast<WPARAM>(line), static_cast<LPARAM>(lineCharacterIndex)));
+}
+#pragma warning(pop)

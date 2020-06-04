@@ -256,7 +256,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	EnableFullScreenMode(ID_VIEW_FULLSCREEN);
 
-	// CG: The following line was added by the Splash Screen component.
+	// The following line was added by the Splash Screen component.
 	CSplashWnd::ShowSplashScreen(this);
 
 	return 0;

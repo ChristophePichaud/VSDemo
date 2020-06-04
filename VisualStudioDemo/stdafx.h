@@ -30,6 +30,12 @@
 
 #include <afxcontrolbars.h>	// MFC support for ribbons and control bars
 
+#include <string>
+#include <vector>
+#include <memory>
+#include <array>
+#include <string_view>
+
 #define USE_SCINTILLA
 #define SCI_NAMESPACE
 #ifdef USE_SCINTILLA
@@ -38,9 +44,6 @@
 #include <SciLexer.h>
 #endif
 
-#include <string>
-#include <vector>
-#include <memory>
 
 #include <winerror.h>
 

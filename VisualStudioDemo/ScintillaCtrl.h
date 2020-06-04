@@ -3,7 +3,7 @@ Module : ScintillaCtrl.h
 Purpose: Defines the interface for an MFC wrapper class for the Scintilla edit control (www.scintilla.org)
 Created: PJN / 19-03-2004
 
-Copyright (c) 2004 - 2017 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2004 - 2020 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -30,59 +30,26 @@ to maintain a single distribution point for the source code.
 #include <Scintilla.h>
 #endif //#ifndef SCINTILLA_H
 
+#ifndef __ATTR_SAL
+#pragma message("To avoid this message, please put sal.h in your pre compiled header (normally stdafx.h)")
+#include <sal.h>
+#endif //#ifndef __ATTR_SAL
+
 #ifndef SCINTILLACTRL_EXT_CLASS
 #define SCINTILLACTRL_EXT_CLASS
 #endif //#ifndef SCINTILLACTRL_EXT_CLASS
-
-#ifndef _In_
-#define _In_
-#endif //#ifndef _In_
-
-#ifndef _In_z_
-#define _In_z_
-#endif //#ifndef _In_z_
-
-#ifndef _In_reads_bytes_
-#define _In_reads_bytes_(size)
-#endif //#ifndef _In_reads_bytes_
-
-#ifndef _Inout_
-#define _Inout_
-#endif //#ifndef _Inout_
-
-#ifndef _Inout_opt_
-#define _Inout_opt_
-#endif //#ifndef _Inout_opt_
-
-#ifndef _Inout_updates_opt_
-#define _Inout_updates_opt_(size)
-#endif //#ifndef _Inout_updates_opt_
-
-#ifndef _In_opt_
-#define _In_opt_
-#endif //#ifndef _In_opt_
-
-#ifndef _Inout_z_
-#define _Inout_z_
-#endif //#ifndef _Inout_z_
-
-#ifndef _In_opt_z_
-#define _In_opt_z_
-#endif //#ifndef _In_opt_z_
-
-#ifndef _In_NLS_string_
-#define _In_NLS_string_(size)
-#endif //#ifndef _In_NLS_string_
 
 
 //////////////////// Classes //////////////////////////////////////////////////
 
 class SCINTILLACTRL_EXT_CLASS CScintillaCtrl : public CWnd
 {
+protected:
+  using CWnd::Create; //To suppress C4263
+
 public:
 //Constructors / Destructors
-  CScintillaCtrl();
-  virtual ~CScintillaCtrl();
+  CScintillaCtrl() noexcept;
 
 //Creation
   BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, DWORD dwExStyle = 0, LPVOID lpParam = nullptr);
@@ -92,8 +59,8 @@ public:
   inline LRESULT Call(_In_ UINT message, _In_ WPARAM wParam, _In_ LPARAM lParam);
   LRESULT GetDirectFunction();
   LRESULT GetDirectPointer();
-  BOOL    GetCallDirect() const;
-  void    SetCallDirect(_In_ BOOL bDirect);
+  [[nodiscard]] BOOL GetCallDirect() const noexcept;
+  void SetCallDirect(_In_ BOOL bDirect) noexcept;
 
 //Unicode support
 #ifdef _UNICODE
@@ -113,38 +80,35 @@ public:
   void ReplaceSel(_In_z_ const wchar_t* text);
   void SetText(_In_z_ const wchar_t* text);
   CStringW GetText(_In_ int length);
-  int ReplaceTarget(_In_ int length, _In_ const wchar_t* text);
-  int ReplaceTargetRE(_In_ int length, _In_ const wchar_t* text);
-  int SearchInTarget(_In_ int length, _In_ const wchar_t* text);
+  Sci_Position ReplaceTarget(_In_ Sci_Position length, _In_ const wchar_t* text);
+  Sci_Position ReplaceTargetRE(_In_ Sci_Position length, _In_ const wchar_t* text);
+  Sci_Position SearchInTarget(_In_ Sci_Position length, _In_ const wchar_t* text);
   void CallTipShow(_In_ Sci_Position pos, _In_z_ const wchar_t* definition);
   int TextWidth(_In_ int style, _In_z_ const wchar_t* text);
   void AppendText(_In_ int length, _In_ const wchar_t* text);
-  int SearchNext(_In_ int flags, _In_z_ const wchar_t* text);
-  int SearchPrev(_In_ int flags, _In_z_ const wchar_t* text);
+  Sci_Position SearchNext(_In_ int flags, _In_z_ const wchar_t* text);
+  Sci_Position SearchPrev(_In_ int flags, _In_z_ const wchar_t* text);
   void CopyText(_In_ int length, _In_ const wchar_t* text);
   void SetWhitespaceChars(_In_z_ const wchar_t* characters);
-  void SetProperty(_In_z_ const wchar_t* key, _In_z_ const wchar_t* value);
+  void SetScintillaProperty(_In_z_ const wchar_t* key, _In_z_ const wchar_t* value);
   void SetKeyWords(_In_ int keywordSet, _In_z_ const wchar_t* keyWords);
   void SetIdentifiers(_In_ int style, _In_z_ const wchar_t* identifiers);
   void SetLexerLanguage(_In_z_ const wchar_t* language);
   void LoadLexerLibrary(_In_z_ const wchar_t* path);
-  CStringW GetProperty(_In_z_ const wchar_t* key);
+  CStringW GetScintillaProperty(_In_z_ const wchar_t* key);
   CStringW GetPropertyExpanded(_In_z_ const wchar_t* key);
   int GetPropertyInt(_In_z_ const wchar_t* key, _In_ int defaultValue);
   CStringW StyleGetFont(_In_ int style);
   void MarginSetText(_In_ int line, _In_z_ const wchar_t* text);
   //Note we do not have a MarginGetText method as Scintilla does not provide a way of a priori working out a valid length of a UTF8 buffer for SCI_MARGINGETTEXT
-  void MarginSetStyles(_In_ int line, _In_z_ const wchar_t* styles);
-  //Note we do not have a MarginGetStyles method as Scintilla does not provide a way of a priori working out a valid length of a UTF8 buffer for SCI_MARGINGETSTYLES
   void AnnotationSetText(_In_ int line, _In_z_ const wchar_t* text);
   //Note we do not have a AnnotationGetText method as Scintilla does not provide a way of a priori working out a valid length of a UTF8 buffer for SCI_ANNOTATIONGETTEXT
-  void AnnotationSetStyles(_In_ int line, _In_z_ const wchar_t* styles);
-  //Note we do not have a AnnotationGetStyles method as Scintilla does not provide a way of a priori working out a valid length of a UTF8 buffer for SCI_ANNOTATIONGETSTYLES
   CStringW AutoCGetCurrentText();
   CStringW GetLexerLanguage();
   CStringW PropertyNames();
   int PropertyType(_In_z_ const wchar_t* name);
   void ToggleFoldShowText(_In_ int line, _In_ const wchar_t* text);
+  void SetDefaultFoldDisplayText(_In_z_ const wchar_t* text);
   CStringW DescribeProperty(_In_z_ const wchar_t* name);
   CStringW DescribeKeyWordSets();
   CStringW GetTag(_In_ int tagNumber);
@@ -155,6 +119,7 @@ public:
   CStringW NameOfStyle(_In_ int style);
   CStringW TagsOfStyle(_In_ int style);
   CStringW DescriptionOfStyle(_In_ int style);
+  CStringW GetDefaultFoldDisplayText();
 
   static CStringW UTF82W(_In_NLS_string_(nLength) const char* pszText, _In_ int nLength);
   static CStringA W2UTF8(_In_NLS_string_(nLength) const wchar_t* pszText, _In_ int nLength);
@@ -162,7 +127,7 @@ public:
   CStringA GetSelText();
   CStringA GetCurLine();
   CStringA GetLine(_In_ int line);
-  CStringA GetProperty(_In_z_ const char* key);
+  CStringA GetScintillaProperty(_In_z_ const char* key);
   CStringA GetText(_In_ int length);
   CStringA GetPropertyExpanded(_In_z_ const char* key);
   CStringA StyleGetFont(_In_ int style);
@@ -179,17 +144,18 @@ public:
   CStringA NameOfStyle(_In_ int style);
   CStringA TagsOfStyle(_In_ int style);
   CStringA DescriptionOfStyle(_In_ int style);
+  CStringA GetDefaultFoldDisplayText();
 #endif //#ifdef _UNICODE
 
 //Auto generated using the "ConvertScintillaiface.js" script
-  void AddText(_In_ int length, _In_reads_bytes_(length) const char* text);
-  void AddStyledText(_In_ int length, _In_reads_bytes_(length) char* c);
+  void AddText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text);
+  void AddStyledText(_In_ Sci_Position length, _In_reads_bytes_(length) char* c);
   void InsertText(_In_ Sci_Position pos, _In_z_ const char* text);
-  void ChangeInsertion(_In_ int length, _In_reads_bytes_(length) const char* text);
+  void ChangeInsertion(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text);
   void ClearAll();
-  void DeleteRange(_In_ Sci_Position start, _In_ int lengthDelete);
+  void DeleteRange(_In_ Sci_Position start, _In_ Sci_Position lengthDelete);
   void ClearDocumentStyle();
-  int GetLength();
+  Sci_Position GetLength();
   int GetCharAt(_In_ Sci_Position pos);
   Sci_Position GetCurrentPos();
   Sci_Position GetAnchor();
@@ -198,10 +164,12 @@ public:
   void SetUndoCollection(_In_ BOOL collectUndo);
   void SelectAll();
   void SetSavePoint();
-  int GetStyledText(_Inout_ Sci_TextRange* tr);
+  Sci_Position GetStyledText(_Inout_ Sci_TextRange* tr);
   BOOL CanRedo();
   int MarkerLineFromHandle(_In_ int markerHandle);
   void MarkerDeleteHandle(_In_ int markerHandle);
+  int MarkerHandleFromLine(_In_ int line, _In_ int which);
+  int MarkerNumberFromLine(_In_ int line, _In_ int which);
   BOOL GetUndoCollection();
   int GetViewWS();
   void SetViewWS(_In_ int viewWS);
@@ -212,17 +180,19 @@ public:
   void GotoLine(_In_ int line);
   void GotoPos(_In_ Sci_Position caret);
   void SetAnchor(_In_ Sci_Position anchor);
-  int GetCurLine(_In_ int length, _Inout_opt_ char* text);
+  Sci_Position GetCurLine(_In_ Sci_Position length, _Inout_opt_ char* text);
   Sci_Position GetEndStyled();
   void ConvertEOLs(_In_ int eolMode);
   int GetEOLMode();
   void SetEOLMode(_In_ int eolMode);
   void StartStyling(_In_ Sci_Position start, _In_ int unused);
-  void SetStyling(_In_ int length, _In_ int style);
+  void SetStyling(_In_ Sci_Position length, _In_ int style);
   BOOL GetBufferedDraw();
   void SetBufferedDraw(_In_ BOOL buffered);
   void SetTabWidth(_In_ int tabWidth);
   int GetTabWidth();
+  void SetTabMinimumWidth(_In_ int pixels);
+  int GetTabMinimumWidth();
   void ClearTabStops(_In_ int line);
   void AddTabStop(_In_ int line, _In_ int x);
   int GetNextTabStop(_In_ int line, _In_ int x);
@@ -297,12 +267,14 @@ public:
   void AssignCmdKey(_In_ DWORD keyDefinition, _In_ int sciCommand);
   void ClearCmdKey(_In_ DWORD keyDefinition);
   void ClearAllCmdKeys();
-  void SetStylingEx(_In_ int length, _In_ const char* styles);
+  void SetStylingEx(_In_ Sci_Position length, _In_ const char* styles);
   void StyleSetVisible(_In_ int style, _In_ BOOL visible);
   int GetCaretPeriod();
   void SetCaretPeriod(_In_ int periodMilliseconds);
   void SetWordChars(_In_ const char* characters);
   int GetWordChars(_Inout_opt_ char* characters);
+  void SetCharacterCategoryOptimization(_In_ int countCharacters);
+  int GetCharacterCategoryOptimization();
   void BeginUndoAction();
   void EndUndoAction();
   void IndicSetStyle(_In_ int indicator, _In_ int indicatorStyle);
@@ -321,8 +293,6 @@ public:
   void SetWhitespaceBack(_In_ BOOL useSetting, _In_ COLORREF back);
   void SetWhitespaceSize(_In_ int size);
   int GetWhitespaceSize();
-  void SetStyleBits(_In_ int bits);
-  int GetStyleBits();
   void SetLineState(_In_ int line, _In_ int state);
   int GetLineState(_In_ int line);
   int GetMaxLineState();
@@ -333,7 +303,7 @@ public:
   int GetCaretLineFrame();
   void SetCaretLineFrame(_In_ int width);
   void StyleSetChangeable(_In_ int style, _In_ BOOL changeable);
-  void AutoCShow(_In_ int lengthEntered, _In_z_ const char* itemList);
+  void AutoCShow(_In_ Sci_Position lengthEntered, _In_z_ const char* itemList);
   void AutoCCancel();
   BOOL AutoCActive();
   Sci_Position AutoCPosStart();
@@ -369,14 +339,15 @@ public:
   void SetLineIndentation(_In_ int line, _In_ int indentation);
   int GetLineIndentation(_In_ int line);
   Sci_Position GetLineIndentPosition(_In_ int line);
-  int GetColumn(_In_ Sci_Position pos);
-  int CountCharacters(_In_ Sci_Position start, _In_ Sci_Position end);
+  Sci_Position GetColumn(_In_ Sci_Position pos);
+  Sci_Position CountCharacters(_In_ Sci_Position start, _In_ Sci_Position end);
+  Sci_Position CountCodeUnits(_In_ Sci_Position start, _In_ Sci_Position end);
   void SetHScrollBar(_In_ BOOL visible);
   BOOL GetHScrollBar();
   void SetIndentationGuides(_In_ int indentView);
   int GetIndentationGuides();
-  void SetHighlightGuide(_In_ int column);
-  int GetHighlightGuide();
+  void SetHighlightGuide(_In_ Sci_Position column);
+  Sci_Position GetHighlightGuide();
   Sci_Position GetLineEndPosition(_In_ int line);
   int GetCodePage();
   COLORREF GetCaretFore();
@@ -394,7 +365,7 @@ public:
   Sci_Position FindText(_In_ int searchFlags, _Inout_ Sci_TextToFind* ft);
   Sci_Position FormatRange(_In_ BOOL draw, _In_ Sci_RangeToFormat* fr);
   int GetFirstVisibleLine();
-  int GetLine(_In_ int line, _Inout_ char* text);
+  Sci_Position GetLine(_In_ int line, _Inout_ char* text);
   int GetLineCount();
   void SetMarginLeft(_In_ int pixelWidth);
   int GetMarginLeft();
@@ -402,14 +373,14 @@ public:
   int GetMarginRight();
   BOOL GetModify();
   void SetSel(_In_ Sci_Position anchor, _In_ Sci_Position caret);
-  int GetSelText(_Inout_opt_ char* text);
-  int GetTextRange(_Inout_ Sci_TextRange* tr);
+  Sci_Position GetSelText(_Inout_opt_ char* text);
+  Sci_Position GetTextRange(_Inout_ Sci_TextRange* tr);
   void HideSelection(_In_ BOOL hide);
   int PointXFromPosition(_In_ Sci_Position pos);
   int PointYFromPosition(_In_ Sci_Position pos);
   int LineFromPosition(_In_ Sci_Position pos);
   Sci_Position PositionFromLine(_In_ int line);
-  void LineScroll(_In_ int columns, _In_ int lines);
+  void LineScroll(_In_ Sci_Position columns, _In_ int lines);
   void ScrollCaret();
   void ScrollRange(_In_ Sci_Position secondary, _In_ Sci_Position primary);
   void ReplaceSel(_In_z_ const char* text);
@@ -424,31 +395,35 @@ public:
   void Paste();
   void Clear();
   void SetText(_In_z_ const char* text);
-  int GetText(_In_ int length, _Inout_updates_opt_(length) char* text);
-  int GetTextLength();
+  Sci_Position GetText(_In_ Sci_Position length, _Inout_updates_opt_(length) char* text);
+  Sci_Position GetTextLength();
   void SetOvertype(_In_ BOOL overType);
   BOOL GetOvertype();
   void SetCaretWidth(_In_ int pixelWidth);
   int GetCaretWidth();
   void SetTargetStart(_In_ Sci_Position start);
   Sci_Position GetTargetStart();
+  void SetTargetStartVirtualSpace(_In_ Sci_Position space);
+  Sci_Position GetTargetStartVirtualSpace();
   void SetTargetEnd(_In_ Sci_Position end);
   Sci_Position GetTargetEnd();
+  void SetTargetEndVirtualSpace(_In_ Sci_Position space);
+  Sci_Position GetTargetEndVirtualSpace();
   void SetTargetRange(_In_ Sci_Position start, _In_ Sci_Position end);
-  int GetTargetText(_Inout_opt_ char* text);
+  Sci_Position GetTargetText(_Inout_opt_ char* text);
   void TargetFromSelection();
   void TargetWholeDocument();
-  int ReplaceTarget(_In_ int length, _In_ const char* text);
-  int ReplaceTargetRE(_In_ int length, _In_ const char* text);
-  int SearchInTarget(_In_ int length, _In_reads_bytes_(length) const char* text);
+  Sci_Position ReplaceTarget(_In_ Sci_Position length, _In_ const char* text);
+  Sci_Position ReplaceTargetRE(_In_ Sci_Position length, _In_ const char* text);
+  Sci_Position SearchInTarget(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text);
   void SetSearchFlags(_In_ int searchFlags);
   int GetSearchFlags();
   void CallTipShow(_In_ Sci_Position pos, _In_z_ const char* definition);
   void CallTipCancel();
   BOOL CallTipActive();
   Sci_Position CallTipPosStart();
-  void CallTipSetPosStart(_In_ int posStart);
-  void CallTipSetHlt(_In_ int highlightStart, _In_ int highlightEnd);
+  void CallTipSetPosStart(_In_ Sci_Position posStart);
+  void CallTipSetHlt(_In_ Sci_Position highlightStart, _In_ Sci_Position highlightEnd);
   void CallTipSetBack(_In_ COLORREF back);
   void CallTipSetFore(_In_ COLORREF fore);
   void CallTipSetForeHlt(_In_ COLORREF fore);
@@ -470,6 +445,9 @@ public:
   void ToggleFold(_In_ int line);
   void ToggleFoldShowText(_In_ int line, _In_ const char* text);
   void FoldDisplayTextSetStyle(_In_ int style);
+  int FoldDisplayTextGetStyle();
+  void SetDefaultFoldDisplayText(_In_z_ const char* text);
+  int GetDefaultFoldDisplayText(_Inout_opt_ char* text);
   void FoldLine(_In_ int line, _In_ int action);
   void FoldChildren(_In_ int line, _In_ int action);
   void ExpandChildren(_In_ int line, _In_ int level);
@@ -485,8 +463,8 @@ public:
   BOOL GetBackSpaceUnIndents();
   void SetMouseDwellTime(_In_ int periodMilliseconds);
   int GetMouseDwellTime();
-  int WordStartPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters);
-  int WordEndPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters);
+  Sci_Position WordStartPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters);
+  Sci_Position WordEndPosition(_In_ Sci_Position pos, _In_ BOOL onlyWordCharacters);
   BOOL IsRangeWord(_In_ Sci_Position start, _In_ Sci_Position end);
   void SetIdleStyling(_In_ int idleStyling);
   int GetIdleStyling();
@@ -512,7 +490,7 @@ public:
   int TextHeight(_In_ int line);
   void SetVScrollBar(_In_ BOOL visible);
   BOOL GetVScrollBar();
-  void AppendText(_In_ int length, _In_reads_bytes_(length) const char* text);
+  void AppendText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text);
   int GetPhasesDraw();
   void SetPhasesDraw(_In_ int phases);
   void SetFontQuality(_In_ int fontQuality);
@@ -587,7 +565,7 @@ public:
   void VCHomeWrapExtend();
   void LineCopy();
   void MoveCaretInsideView();
-  int LineLength(_In_ int line);
+  Sci_Position LineLength(_In_ int line);
   void BraceHighlight(_In_ Sci_Position posA, _In_ Sci_Position posB);
   void BraceHighlightIndicator(_In_ BOOL useSetting, _In_ int indicator);
   void BraceBadLight(_In_ Sci_Position pos);
@@ -598,26 +576,29 @@ public:
   void* GetDocPointer();
   void SetDocPointer(_In_opt_ void* doc);
   void SetModEventMask(_In_ int eventMask);
-  int GetEdgeColumn();
-  void SetEdgeColumn(_In_ int column);
+  Sci_Position GetEdgeColumn();
+  void SetEdgeColumn(_In_ Sci_Position column);
   int GetEdgeMode();
   void SetEdgeMode(_In_ int edgeMode);
   COLORREF GetEdgeColour();
   void SetEdgeColour(_In_ COLORREF edgeColour);
-  void MultiEdgeAddLine(_In_ int column, _In_ COLORREF edgeColour);
+  void MultiEdgeAddLine(_In_ Sci_Position column, _In_ COLORREF edgeColour);
   void MultiEdgeClearAll();
   void SearchAnchor();
-  int SearchNext(_In_ int searchFlags, _In_z_ const char* text);
-  int SearchPrev(_In_ int searchFlags, _In_z_ const char* text);
+  Sci_Position SearchNext(_In_ int searchFlags, _In_z_ const char* text);
+  Sci_Position SearchPrev(_In_ int searchFlags, _In_z_ const char* text);
   int LinesOnScreen();
   void UsePopUp(_In_ int popUpMode);
   BOOL SelectionIsRectangle();
   void SetZoom(_In_ int zoomInPoints);
   int GetZoom();
-  int CreateDocument();
-  void AddRefDocument(_In_ int doc);
-  void ReleaseDocument(_In_ int doc);
+  void* CreateDocument(_In_ Sci_Position bytes, _In_ int documentOptions);
+  void AddRefDocument(_In_ void* doc);
+  void ReleaseDocument(_In_ void* doc);
+  int GetDocumentOptions();
   int GetModEventMask();
+  void SetCommandEvents(_In_ BOOL commandEvents);
+  BOOL GetCommandEvents();
   void SCISetFocus(_In_ BOOL focus);
   BOOL GetFocus();
   void SetStatus(_In_ int status);
@@ -659,11 +640,13 @@ public:
   void ParaUpExtend();
   Sci_Position PositionBefore(_In_ Sci_Position pos);
   Sci_Position PositionAfter(_In_ Sci_Position pos);
-  Sci_Position PositionRelative(_In_ Sci_Position pos, _In_ int relative);
+  Sci_Position PositionRelative(_In_ Sci_Position pos, _In_ Sci_Position relative);
+  Sci_Position PositionRelativeCodeUnits(_In_ Sci_Position pos, _In_ Sci_Position relative);
   void CopyRange(_In_ Sci_Position start, _In_ Sci_Position end);
-  void CopyText(_In_ int length, _In_reads_bytes_(length) const char* text);
+  void CopyText(_In_ Sci_Position length, _In_reads_bytes_(length) const char* text);
   void SetSelectionMode(_In_ int selectionMode);
   int GetSelectionMode();
+  BOOL GetMoveExtendsSelection();
   Sci_Position GetLineSelStartPosition(_In_ int line);
   Sci_Position GetLineSelEndPosition(_In_ int line);
   void LineDownRectExtend();
@@ -696,11 +679,11 @@ public:
   int AutoCGetMulti();
   void AutoCSetOrder(_In_ int order);
   int AutoCGetOrder();
-  void Allocate(_In_ int bytes);
-  int TargetAsUTF8(_Inout_ char* s);
-  void SetLengthForEncode(_In_ int bytes);
-  int EncodedFromUTF8(_In_ const char* utf8, _Inout_ char* encoded);
-  int FindColumn(_In_ int line, _In_ int column);
+  void Allocate(_In_ Sci_Position bytes);
+  Sci_Position TargetAsUTF8(_Inout_ char* s);
+  void SetLengthForEncode(_In_ Sci_Position bytes);
+  Sci_Position EncodedFromUTF8(_In_ const char* utf8, _Inout_ char* encoded);
+  Sci_Position FindColumn(_In_ int line, _In_ Sci_Position column);
   int GetCaretSticky();
   void SetCaretSticky(_In_ int useCaretStickyBehaviour);
   void ToggleCaretSticky();
@@ -715,17 +698,17 @@ public:
   int GetIndicatorCurrent();
   void SetIndicatorValue(_In_ int value);
   int GetIndicatorValue();
-  void IndicatorFillRange(_In_ Sci_Position start, _In_ int lengthFill);
-  void IndicatorClearRange(_In_ Sci_Position start, _In_ int lengthClear);
+  void IndicatorFillRange(_In_ Sci_Position start, _In_ Sci_Position lengthFill);
+  void IndicatorClearRange(_In_ Sci_Position start, _In_ Sci_Position lengthClear);
   int IndicatorAllOnFor(_In_ Sci_Position pos);
   int IndicatorValueAt(_In_ int indicator, _In_ Sci_Position pos);
-  int IndicatorStart(_In_ int indicator, _In_ Sci_Position pos);
-  int IndicatorEnd(_In_ int indicator, _In_ Sci_Position pos);
+  Sci_Position IndicatorStart(_In_ int indicator, _In_ Sci_Position pos);
+  Sci_Position IndicatorEnd(_In_ int indicator, _In_ Sci_Position pos);
   void SetPositionCache(_In_ int size);
   int GetPositionCache();
   void CopyAllowLine();
   const char* GetCharacterPointer();
-  void* GetRangePointer(_In_ Sci_Position start, _In_ int lengthRange);
+  void* GetRangePointer(_In_ Sci_Position start, _In_ Sci_Position lengthRange);
   Sci_Position GetGapPosition();
   void IndicSetAlpha(_In_ int indicator, _In_ int alpha);
   int IndicGetAlpha(_In_ int indicator);
@@ -786,22 +769,24 @@ public:
   Sci_Position GetSelectionNCaret(_In_ int selection);
   void SetSelectionNAnchor(_In_ int selection, _In_ Sci_Position anchor);
   Sci_Position GetSelectionNAnchor(_In_ int selection);
-  void SetSelectionNCaretVirtualSpace(_In_ int selection, _In_ int space);
-  int GetSelectionNCaretVirtualSpace(_In_ int selection);
-  void SetSelectionNAnchorVirtualSpace(_In_ int selection, _In_ int space);
-  int GetSelectionNAnchorVirtualSpace(_In_ int selection);
+  void SetSelectionNCaretVirtualSpace(_In_ int selection, _In_ Sci_Position space);
+  Sci_Position GetSelectionNCaretVirtualSpace(_In_ int selection);
+  void SetSelectionNAnchorVirtualSpace(_In_ int selection, _In_ Sci_Position space);
+  Sci_Position GetSelectionNAnchorVirtualSpace(_In_ int selection);
   void SetSelectionNStart(_In_ int selection, _In_ Sci_Position anchor);
   Sci_Position GetSelectionNStart(_In_ int selection);
+  Sci_Position GetSelectionNStartVirtualSpace(_In_ int selection);
   void SetSelectionNEnd(_In_ int selection, _In_ Sci_Position caret);
+  Sci_Position GetSelectionNEndVirtualSpace(_In_ int selection);
   Sci_Position GetSelectionNEnd(_In_ int selection);
   void SetRectangularSelectionCaret(_In_ Sci_Position caret);
   Sci_Position GetRectangularSelectionCaret();
   void SetRectangularSelectionAnchor(_In_ Sci_Position anchor);
   Sci_Position GetRectangularSelectionAnchor();
-  void SetRectangularSelectionCaretVirtualSpace(_In_ int space);
-  int GetRectangularSelectionCaretVirtualSpace();
-  void SetRectangularSelectionAnchorVirtualSpace(_In_ int space);
-  int GetRectangularSelectionAnchorVirtualSpace();
+  void SetRectangularSelectionCaretVirtualSpace(_In_ Sci_Position space);
+  Sci_Position GetRectangularSelectionCaretVirtualSpace();
+  void SetRectangularSelectionAnchorVirtualSpace(_In_ Sci_Position space);
+  Sci_Position GetRectangularSelectionAnchorVirtualSpace();
   void SetVirtualSpaceOptions(_In_ int virtualSpaceOptions);
   int GetVirtualSpaceOptions();
   void SetRectangularSelectionModifier(_In_ int modifier);
@@ -832,7 +817,7 @@ public:
   void ScrollToEnd();
   void SetTechnology(_In_ int technology);
   int GetTechnology();
-  int CreateLoader(_In_ int bytes);
+  void* CreateLoader(_In_ Sci_Position bytes, _In_ int documentOptions);
   void FindIndicatorShow(_In_ Sci_Position start, _In_ Sci_Position end);
   void FindIndicatorFlash(_In_ Sci_Position start, _In_ Sci_Position end);
   void FindIndicatorHide();
@@ -851,14 +836,13 @@ public:
   void SetLexer(_In_ int lexer);
   int GetLexer();
   void Colourise(_In_ Sci_Position start, _In_ Sci_Position end);
-  void SetProperty(_In_z_ const char* key, _In_z_ const char* value);
+  void SetScintillaProperty(_In_z_ const char* key, _In_z_ const char* value);
   void SetKeyWords(_In_ int keyWordSet, _In_z_ const char* keyWords);
   void SetLexerLanguage(_In_z_ const char* language);
   void LoadLexerLibrary(_In_z_ const char* path);
-  int GetProperty(_In_z_ const char* key, _Inout_opt_ char* value);
+  int GetScintillaProperty(_In_z_ const char* key, _Inout_opt_ char* value);
   int GetPropertyExpanded(_In_z_ const char* key, _Inout_opt_ char* value);
   int GetPropertyInt(_In_z_ const char* key, _In_ int defaultValue);
-  int GetStyleBitsNeeded();
   int GetLexerLanguage(_Inout_opt_ char* language);
   void* PrivateLexerCall(_In_ int operation, _In_opt_ void* pointer);
   int PropertyNames(_Inout_opt_ char* names);
@@ -876,9 +860,17 @@ public:
   int DistanceToSecondaryStyles();
   int GetSubStyleBases(_Inout_z_ char* styles);
   int GetNamedStyles();
-  int NameOfStyle(_In_ int style, _Inout_opt_ char* names);
-  int TagsOfStyle(_In_ int style, _Inout_opt_ char* names);
-  int DescriptionOfStyle(_In_ int style, _Inout_opt_ char* names);
+  int NameOfStyle(_In_ int style, _Inout_opt_ char* name);
+  int TagsOfStyle(_In_ int style, _Inout_opt_ char* tags);
+  int DescriptionOfStyle(_In_ int style, _Inout_opt_ char* description);
+  void SetILexer(_In_ void* ilexer);
+  int GetBidirectional();
+  void SetBidirectional(_In_ int bidirectional);
+  int GetLineCharacterIndex();
+  void AllocateLineCharacterIndex(_In_ int lineCharacterIndex);
+  void ReleaseLineCharacterIndex(_In_ int lineCharacterIndex);
+  int LineFromIndexPosition(_In_ Sci_Position pos, _In_ int lineCharacterIndex);
+  Sci_Position IndexPositionFromLine(_In_ int line, _In_ int lineCharacterIndex);
 
 protected:
   DECLARE_DYNAMIC(CScintillaCtrl)

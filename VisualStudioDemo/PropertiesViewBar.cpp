@@ -160,7 +160,7 @@ void CPropertiesViewBar::InitPropList()
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
-	std::auto_ptr<CMFCPropertyGridProperty> apGroup1(new CMFCPropertyGridProperty(_T("Appearance")));
+	std::unique_ptr<CMFCPropertyGridProperty> apGroup1(new CMFCPropertyGridProperty(_T("Appearance")));
 
 	apGroup1->AddSubItem(new CMFCPropertyGridProperty(_T("3D Look"), (_variant_t) false, _T("Specifies the dialog's font will be nonbold and controls will have a 3D border")));
 
@@ -176,7 +176,7 @@ void CPropertiesViewBar::InitPropList()
 
 	m_wndPropList.AddProperty(apGroup1.release());
 
-	std::auto_ptr<CMFCPropertyGridProperty> apSize(new CMFCPropertyGridProperty(_T("Window Size"), 0, TRUE));
+	std::unique_ptr<CMFCPropertyGridProperty> apSize(new CMFCPropertyGridProperty(_T("Window Size"), 0, TRUE));
 
 	pProp = new CMFCPropertyGridProperty(_T("Height"), (_variant_t) 250l, _T("Specifies the dialog's height"));
 	pProp->EnableSpinControl(TRUE, 0, 1000);
@@ -188,7 +188,7 @@ void CPropertiesViewBar::InitPropList()
 
 	m_wndPropList.AddProperty(apSize.release());
 
-	std::auto_ptr<CMFCPropertyGridProperty> apGroup2(new CMFCPropertyGridProperty(_T("Font")));
+	std::unique_ptr<CMFCPropertyGridProperty> apGroup2(new CMFCPropertyGridProperty(_T("Font")));
 
 	LOGFONT lf;
 	CFont* font = CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
@@ -201,7 +201,7 @@ void CPropertiesViewBar::InitPropList()
 
 	m_wndPropList.AddProperty(apGroup2.release());
 
-	std::auto_ptr<CMFCPropertyGridProperty> apGroup3(new CMFCPropertyGridProperty(_T("Misc")));
+	std::unique_ptr<CMFCPropertyGridProperty> apGroup3(new CMFCPropertyGridProperty(_T("Misc")));
 	pProp = new CMFCPropertyGridProperty(_T("(Name)"), _T("IDD_ABOUT_BOX(dialog)"));
 	pProp->Enable(FALSE);
 	apGroup3->AddSubItem(pProp);
@@ -218,7 +218,7 @@ void CPropertiesViewBar::InitPropList()
 
 	m_wndPropList.AddProperty(apGroup3.release());
 
-	std::auto_ptr<CMFCPropertyGridProperty> apGroup4(new CMFCPropertyGridProperty(_T("Hierarchy")));
+	std::unique_ptr<CMFCPropertyGridProperty> apGroup4(new CMFCPropertyGridProperty(_T("Hierarchy")));
 
 	CMFCPropertyGridProperty* pGroup41 = new CMFCPropertyGridProperty(_T("First sub-level"));
 	apGroup4->AddSubItem(pGroup41);

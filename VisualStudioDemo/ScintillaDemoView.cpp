@@ -126,7 +126,7 @@ void CScintillaDemoView::OnInitialUpdate()
   rCtrl.SetMarginSensitiveN(2, TRUE);
   rCtrl.SetMarginTypeN(2, SC_MARGIN_SYMBOL);
   rCtrl.SetMarginMaskN(2, SC_MASK_FOLDERS);
-  rCtrl.SetProperty(_T("fold"), _T("1"));
+  //rCtrl.SetProperty(_T("fold"), _T("1"));
 
   //Setup markers:;
   DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_MINUS, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0xFF));
